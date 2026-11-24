@@ -1,25 +1,15 @@
 {
-  "name": "THE VETERAN — Top 3 Entry",
+  "name": "THE VETERAN v3.0 — Portfolio Top 3",
   "short_name": "THE VETERAN",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#090d16",
-  "theme_color": "#090d16",
-  "description": "Rujukan Top 3 Entry Binance USD-M Futures (10 Coin)",
+  "background_color": "#080c14",
+  "theme_color": "#080c14",
+  "description": "Scanner Dinamik 10 Coin Binance Futures • Had Risiko Gabungan 0.50% • Kawalan Korelasi",
   "icons": [
-    {
-      "src": "./icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "./icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }

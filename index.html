@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#090d16" />
+  <meta name="theme-color" content="#080c14" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <link rel="manifest" href="./manifest.json" />
   <link rel="icon" type="image/png" href="./icon-192.png" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>THE VETERAN v2.1 — Top 3 Verified Entry</title>
+  <title>THE VETERAN v3.0 — Dynamic Top 3 & Portfolio Risk</title>
   <style>
     :root {
-      --bg: #090d16;
+      --bg: #080c14;
       --surface: #111827;
       --surface-2: #172033;
       --border: #1f2937;
@@ -26,20 +26,24 @@
       --amber-bg: rgba(245, 158, 11, 0.14);
       --blue: #3b82f6;
       --blue-bg: rgba(59, 130, 246, 0.15);
+      --purple: #a78bfa;
+      --purple-bg: rgba(167, 139, 250, 0.14);
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body {
       margin: 0; background: var(--bg); color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      padding-bottom: 78px;
+      padding-bottom: 82px;
     }
     header {
       position: sticky; top: 0; z-index: 30;
-      background: rgba(9, 13, 22, 0.96); backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border); padding: 12px 14px;
+      background: rgba(8, 12, 20, 0.96); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border); padding: 11px 14px;
       display: flex; justify-content: space-between; align-items: center; gap: 8px;
     }
-    .brand-title { font-weight: 800; font-size: 16px; letter-spacing: 0.4px; }
+    .brand-title { font-weight: 800; font-size: 16px; letter-spacing: 0.4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .ver-tag { font-size: 10px; font-weight: 800; background: var(--green-bg); color: var(--green); padding: 2px 6px; border-radius: 6px; }
+    .lock-tag { font-size: 10px; font-weight: 800; background: var(--amber-bg); color: var(--amber); padding: 2px 6px; border-radius: 6px; }
     .brand-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
     .btn-refresh {
       background: var(--blue); color: #fff; border: none; border-radius: 10px;
@@ -47,12 +51,16 @@
     }
     .btn-refresh:disabled { opacity: 0.55; }
 
-    .container { max-width: 720px; margin: 0 auto; padding: 12px; }
+    .container { max-width: 740px; margin: 0 auto; padding: 12px; }
 
-    .risk-bar {
+    /* Portfolio Controls & Risk Budget Bar */
+    .portfolio-box {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;
-      display: grid; grid-template-columns: 1.05fr 1.1fr 0.85fr; gap: 8px; align-items: end;
+      border-radius: 14px; padding: 11px 12px; margin-bottom: 10px;
+    }
+    .risk-bar {
+      display: grid; grid-template-columns: 1fr 1.15fr 0.85fr; gap: 8px; align-items: end;
+      margin-bottom: 10px;
     }
     .field label {
       display: block; font-size: 10px; color: var(--muted);
@@ -63,16 +71,37 @@
       border: 1px solid #334155; border-radius: 8px; padding: 7px 8px;
       font-size: 13px; font-weight: 700;
     }
-
-    .status-strip {
+    .budget-row {
       display: flex; justify-content: space-between; align-items: center;
-      font-size: 11px; color: var(--muted); margin-bottom: 10px; padding: 0 2px; gap: 8px; flex-wrap: wrap;
+      font-size: 11px; margin-bottom: 5px; gap: 6px; flex-wrap: wrap;
     }
+    .meter-track {
+      width: 100%; height: 8px; background: var(--bg); border-radius: 999px;
+      overflow: hidden; border: 1px solid var(--border); display: flex;
+    }
+    .meter-active { background: var(--blue); height: 100%; transition: width 0.3s; }
+    .meter-new { background: var(--green); height: 100%; transition: width 0.3s; }
 
-    .summary-banner { border-radius: 12px; padding: 11px 12px; margin-bottom: 12px; font-size: 12px; line-height: 1.48; }
+    .verify-strip {
+      background: #0d1424; border: 1px solid var(--border); border-radius: 10px;
+      padding: 7px 10px; font-size: 11px; color: var(--muted);
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 6px; margin-bottom: 12px;
+    }
+    .verify-ok { color: var(--green); font-weight: 700; }
+    .verify-bad { color: var(--red); font-weight: 700; }
+
+    .sec-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin: 14px 2px 8px; gap: 8px;
+    }
+    .sec-title { font-size: 13px; font-weight: 800; letter-spacing: 0.3px; text-transform: uppercase; }
+    .sec-count { font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 999px; }
+
+    .summary-banner { border-radius: 12px; padding: 11px 12px; margin-bottom: 10px; font-size: 12px; line-height: 1.48; }
     .banner-wait { background: var(--amber-bg); border: 1px solid rgba(245, 158, 11, 0.35); color: #fde68a; }
     .banner-ok { background: var(--green-bg); border: 1px solid rgba(16, 185, 129, 0.35); color: #a7f3d0; }
-    .banner-warn { background: var(--red-bg); border: 1px solid rgba(239, 68, 68, 0.4); color: #fecaca; }
+    .banner-err { background: var(--red-bg); border: 1px solid rgba(239, 68, 68, 0.45); color: #fecaca; }
 
     .card {
       background: var(--surface); border: 1px solid var(--border);
@@ -80,8 +109,8 @@
     }
     .card.long-card { border-left: 4px solid var(--green); }
     .card.short-card { border-left: 4px solid var(--red); }
-    .card.wait-card { border-left: 4px solid var(--amber); }
-    .card.blocked-card { border-left: 4px solid #64748b; }
+    .card.watch-card { border-left: 4px solid var(--amber); }
+    .card.corr-card { border-left: 4px solid var(--purple); }
 
     .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 10px; }
     .rank-tag {
@@ -89,13 +118,13 @@
       padding: 2px 7px; border-radius: 6px; background: var(--surface-2); color: #cbd5e1; margin-bottom: 4px;
     }
     .coin-name { font-size: 18px; font-weight: 800; }
-    .coin-price { font-size: 13px; color: var(--muted); font-family: ui-monospace, monospace; margin-top: 2px; }
+    .coin-price { font-size: 12.5px; color: var(--muted); font-family: ui-monospace, monospace; margin-top: 2px; }
 
     .pill { display: inline-block; padding: 4px 9px; border-radius: 999px; font-size: 11px; font-weight: 800; }
     .pill-long { background: var(--green-bg); color: var(--green); }
     .pill-short { background: var(--red-bg); color: var(--red); }
     .pill-wait { background: var(--amber-bg); color: var(--amber); }
-    .pill-red { background: var(--red-bg); color: #fca5a5; }
+    .pill-purple { background: var(--purple-bg); color: var(--purple); }
     .pill-blue { background: var(--blue-bg); color: #93c5fd; }
 
     .gate-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; margin-bottom: 10px; }
@@ -104,6 +133,7 @@
       padding: 6px 8px; font-size: 11px; display: flex; align-items: center; gap: 5px;
     }
     .gate-pass { border-color: rgba(16, 185, 129, 0.35); color: #d1fae5; }
+    .gate-warn { border-color: rgba(245, 158, 11, 0.40); color: #fde68a; }
     .gate-fail { border-color: rgba(239, 68, 68, 0.30); color: #cbd5e1; opacity: 0.85; }
 
     .levels-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 10px; }
@@ -121,18 +151,23 @@
     .sizing-strip .lbl { font-size: 10px; color: var(--muted); }
     .sizing-strip .val { font-size: 12px; font-weight: 800; font-family: ui-monospace, monospace; margin-top: 2px; }
 
-    .min-warning {
-      background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.4);
-      border-radius: 10px; padding: 10px; font-size: 12px; line-height: 1.48;
-      color: #fecaca; margin-bottom: 10px;
+    .reason-box {
+      background: rgba(15, 23, 42, 0.85); border: 1px solid var(--border);
+      border-radius: 10px; padding: 9px 10px; font-size: 12px; line-height: 1.48;
+      color: #e2e8f0; margin-bottom: 10px;
     }
-    .wait-lock-box {
+    .watch-lock-box {
       background: rgba(245, 158, 11, 0.08); border: 1px dashed rgba(245, 158, 11, 0.4);
-      border-radius: 10px; padding: 10px; font-size: 12px; line-height: 1.5;
+      border-radius: 10px; padding: 10px; font-size: 12px; line-height: 1.48;
       color: #fde68a; margin-bottom: 10px;
     }
+    .corr-block-box {
+      background: rgba(167, 139, 250, 0.10); border: 1px dashed rgba(167, 139, 250, 0.45);
+      border-radius: 10px; padding: 10px; font-size: 12px; line-height: 1.48;
+      color: #ddd6fe; margin-bottom: 10px;
+    }
 
-    .ind-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    .ind-row { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
     .ind-chip {
       background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
       padding: 3px 7px; font-size: 11px; color: var(--muted); font-family: ui-monospace, monospace;
@@ -145,6 +180,7 @@
     }
     .btn-sec { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; }
     .btn-danger { background: #dc2626; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
     .filter-row { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 10px; padding-bottom: 2px; }
     .chip-btn {
@@ -158,6 +194,14 @@
       padding: 11px 12px; margin-bottom: 8px; display: flex; justify-content: space-between;
       align-items: center; gap: 8px; cursor: pointer;
     }
+
+    .corr-table {
+      width: 100%; border-collapse: collapse; font-size: 11.5px; font-family: ui-monospace, monospace;
+    }
+    .corr-table th, .corr-table td {
+      padding: 7px 6px; border-bottom: 1px solid var(--border); text-align: right;
+    }
+    .corr-table th:first-child, .corr-table td:first-child { text-align: left; }
 
     .check-item {
       display: flex; align-items: flex-start; gap: 10px; padding: 10px 0;
@@ -182,125 +226,167 @@
     .view.active { display: block; }
 
     .modal-bg {
-      position: fixed; inset: 0; z-index: 60; background: rgba(0, 0, 0, 0.75);
+      position: fixed; inset: 0; z-index: 60; background: rgba(0, 0, 0, 0.78);
       display: none; align-items: flex-end; justify-content: center;
     }
     .modal-bg.open { display: flex; }
     .modal-sheet {
       background: var(--bg); border-top: 1px solid #334155; border-radius: 18px 18px 0 0;
-      width: 100%; max-width: 720px; max-height: 88vh; overflow-y: auto; padding: 14px;
+      width: 100%; max-width: 740px; max-height: 88vh; overflow-y: auto; padding: 14px;
     }
     .toast {
       position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%);
       background: #10b981; color: #052e16; font-weight: 800; font-size: 12px;
       padding: 9px 14px; border-radius: 999px; z-index: 80; display: none;
     }
-    .err-box {
-      background: var(--red-bg); border: 1px solid rgba(239,68,68,0.4);
-      border-radius: 12px; padding: 12px; font-size: 12px; line-height: 1.5; margin-bottom: 12px;
-    }
   </style>
 </head>
 <body>
   <header>
     <div>
-      <div class="brand-title">THE VETERAN <span style="color:var(--green);font-size:11px;">v2.1 STRICT</span></div>
-      <div class="brand-sub">1D + 4H + 1H • Auto Tapis Min Order Binance</div>
+      <div class="brand-title">
+        THE VETERAN <span class="ver-tag">v3.0</span> <span class="lock-tag">LIVE AUTO: OFF</span>
+      </div>
+      <div class="brand-sub">10 Coin Dinamik • Risiko Portfolio ≤0.50% • Kawalan Korelasi</div>
     </div>
     <button id="btn-scan" class="btn-refresh" onclick="scanMarket()">🔄 Imbas</button>
   </header>
 
   <div class="container">
-    <div class="risk-bar">
-      <div class="field">
-        <label>Modal (USDT)</label>
-        <input id="inp-equity" type="number" min="10" step="10" value="188" onchange="savePrefsAndRender()" />
+    <!-- Portfolio Risk Budget Control Panel -->
+    <div class="portfolio-box">
+      <div class="risk-bar">
+        <div class="field">
+          <label>Baki Akaun (USDT)</label>
+          <input id="inp-equity" type="number" min="10" step="10" value="188" onchange="savePrefsAndRecompute()" />
+        </div>
+        <div class="field">
+          <label>Had Risiko Jumlah Semua Posisi</label>
+          <select id="inp-risk" onchange="savePrefsAndRecompute()">
+            <option value="0.0025">0.25% Jumlah Maks</option>
+            <option value="0.0035">0.35% Jumlah Maks</option>
+            <option value="0.0050" selected>0.50% Jumlah Maks (Had Keras)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Leverage</label>
+          <select id="inp-lev" onchange="savePrefsAndRecompute()">
+            <option value="3">3× Iso</option>
+            <option value="5" selected>5× Iso</option>
+          </select>
+        </div>
       </div>
-      <div class="field">
-        <label>Risiko / Trade</label>
-        <select id="inp-risk" onchange="savePrefsAndRender()">
-          <option value="0.0025">0.25% (Ketat)</option>
-          <option value="0.0035">0.35% (Demo)</option>
-          <option value="0.0050" selected>0.50% (Had SOP)</option>
-          <option value="0.0100">1.00% (Tinggi ⚠️)</option>
-        </select>
+
+      <div class="budget-row">
+        <span id="budget-text">Bajet Portfolio: <strong>$0.00 / $0.94 (0.00% / 0.50% Maks)</strong></span>
+        <span id="slots-text" style="color:var(--muted);">Slot Aktif: 0/3</span>
       </div>
-      <div class="field">
-        <label>Leverage</label>
-        <select id="inp-lev" onchange="savePrefsAndRender()">
-          <option value="3">3× Iso</option>
-          <option value="5" selected>5× Iso</option>
-        </select>
+      <div class="meter-track">
+        <div id="meter-active" class="meter-active" style="width:0%"></div>
+        <div id="meter-new" class="meter-new" style="width:0%"></div>
+      </div>
+      <div style="font-size:10.5px;color:var(--muted);margin-top:5px;">
+        Biru = Risiko posisi aktif semasa • Hijau = Peruntukan signal baharu. Jumlah gabungan dikunci <strong>≤ 0.50%</strong> (bukan 0.5% × 3).
       </div>
     </div>
 
-    <div class="status-strip">
-      <span id="feed-status">Menyambung ke Binance Futures...</span>
-      <span id="last-updated">-</span>
+    <!-- Verified Binance Futures Data Strip -->
+    <div class="verify-strip">
+      <span id="verify-badge">Menyambung ke Binance Futures...</span>
+      <span id="verify-meta">-</span>
     </div>
 
-    <!-- VIEW 1: TOP 3 -->
+    <!-- VIEW 1: PELUANG (ACTIONABLE 0-3 vs WATCHLIST CANDIDATES 0-3) -->
     <section id="view-top3" class="view active">
       <div id="market-banner"></div>
       <div id="error-container"></div>
-      <div id="top3-container">
-        <div class="card" style="text-align:center;color:var(--muted);padding:26px;">
-          Menarik data 1D, 4H, 1H & syarat minimum order (exchangeInfo) daripada Binance Futures...
+
+      <!-- SECTION A: POSISI BENAR-BENAR LAYAK DIBUKA (0 to 3, NEVER FORCED) -->
+      <div class="sec-header">
+        <div class="sec-title" style="color:var(--green);">✅ Posisi Benar-Benar Layak Dibuka</div>
+        <span id="ready-count-pill" class="sec-count pill-long">0 / 3</span>
+      </div>
+      <div id="ready-container">
+        <div class="card" style="text-align:center;color:var(--muted);padding:24px;">
+          Mengimbas 10 coin utama daripada Binance Futures (1D + 4H + Korelasi + Exchange Filters)...
         </div>
       </div>
+
+      <!-- SECTION B: CALON PELUANG / PANTAUAN (UP TO 3 SEPARATE FROM ACTIONABLE) -->
+      <div class="sec-header" style="margin-top:18px;">
+        <div class="sec-title" style="color:var(--amber);">👀 Calon Peluang / Pantauan (Belum Layak Buka)</div>
+        <span id="watch-count-pill" class="sec-count pill-wait">0 / 3</span>
+      </div>
+      <div id="watch-container"></div>
     </section>
 
-    <!-- VIEW 2: ALL 10 COINS -->
+    <!-- VIEW 2: 10 COIN & MATRIKS KORELASI -->
     <section id="view-scanner" class="view">
       <div class="filter-row">
         <button class="chip-btn active" onclick="setFilter('ALL', this)">Semua (10)</button>
-        <button class="chip-btn" onclick="setFilter('READY', this)">Sah Entry</button>
-        <button class="chip-btn" onclick="setFilter('ELIGIBLE', this)">Lepas Min Binance</button>
+        <button class="chip-btn" onclick="setFilter('READY', this)">Layak Buka</button>
+        <button class="chip-btn" onclick="setFilter('CANDIDATE', this)">Calon Pantauan</button>
         <button class="chip-btn" onclick="setFilter('BULLISH', this)">1D Bullish</button>
         <button class="chip-btn" onclick="setFilter('BEARISH', this)">1D Bearish</button>
       </div>
       <div id="scanner-list"></div>
+
+      <div class="card" style="margin-top:12px;">
+        <div style="font-weight:800;font-size:14px;margin-bottom:6px;">🔗 Korelasi Semasa (48 Candle 4H Terkini)</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">
+          Diukur terus daripada pulangan 4H Binance Futures. Arah sama dengan korelasi <strong>≥ 0.80</strong> disekat automatik; <strong>0.65–0.79</strong> dikenakan potongan risiko 20% supaya tidak menggandakan risiko pasaran yang sama.
+        </div>
+        <div id="corr-matrix-box" style="overflow-x:auto;"></div>
+      </div>
     </section>
 
-    <!-- VIEW 3: PAPER LAB -->
+    <!-- VIEW 3: POSISI AKTIF & PAPER LAB (UP TO 3 SLOTS) -->
     <section id="view-paper" class="view">
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
           <div>
-            <div style="font-size:11px;color:var(--muted);">BAKI SIMULASI PAPER LAB</div>
+            <div style="font-size:11px;color:var(--muted);">BAKI PAPER / SIMULASI</div>
             <div id="paper-bal" style="font-size:22px;font-weight:800;font-family:ui-monospace,monospace;">$1,000.00</div>
           </div>
           <div style="text-align:right;">
-            <div style="font-size:11px;color:var(--muted);">WIN RATE</div>
-            <div id="paper-wr" style="font-size:16px;font-weight:800;">0%</div>
+            <div style="font-size:11px;color:var(--muted);">POSISI AKTIF & WIN RATE</div>
+            <div id="paper-wr" style="font-size:14px;font-weight:800;">0/3 Aktif • 0% WR</div>
           </div>
         </div>
-        <div style="font-size:11px;color:var(--muted);">
-          Uji sekurang-kurangnya 10–15 setup di <strong>Paper Lab / Binance Demo</strong> sebelum guna duit Live.
+        <div style="font-size:11px;color:var(--muted);line-height:1.45;">
+          Setiap posisi aktif yang direkod di sini akan <strong>ditolak terus daripada baki bajet risiko 0.50%</strong> dan disemak korelasinya sebelum signal baharu diluluskan di tab <strong>Peluang</strong>.
         </div>
       </div>
       <div id="paper-trades-list"></div>
     </section>
 
-    <!-- VIEW 4: DISIPLIN & BINANCE RULES -->
+    <!-- VIEW 4: KESELAMATAN & POLISI RISIKO -->
     <section id="view-rules" class="view">
       <div class="card">
-        <div style="font-weight:800;font-size:15px;margin-bottom:6px;">🛡️ Semakan Wajib Sebelum Order Manual</div>
-        <label class="check-item"><input type="checkbox" /> <span>Kad berstatus <strong>SAH ENTRY ✓</strong> (bukan WAIT) dan <strong>LEPAS MIN BINANCE</strong>.</span></label>
-        <label class="check-item"><input type="checkbox" /> <span>Tetapan Binance: <strong>ISOLATED</strong>, Leverage <strong>≤ 5×</strong>, Mode <strong>One-Way</strong>.</span></label>
-        <label class="check-item"><input type="checkbox" /> <span>Masuk guna <strong>Limit Order</strong> pada Zon Entry (elak kejar candle panjang).</span></label>
-        <label class="check-item"><input type="checkbox" /> <span>Pasang <strong>SL (Mark Price)</strong> terus bersama order — jangan biarkan posisi terbuka tanpa SL.</span></label>
-        <label class="check-item"><input type="checkbox" /> <span>Pegang maksimum <strong>1 posisi aktif</strong> sahaja. Jika kena SL, berhenti dan tunggu candle 4H seterusnya.</span></label>
-        <button class="btn btn-sec" style="width:100%;margin-top:10px;" onclick="resetChecklist()">Reset Semakan</button>
+        <div style="font-weight:800;font-size:15px;margin-bottom:6px;">🔒 Status Auto-Trading Live: DIKUNCI (OFF)</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.55;">
+          Aplikasi ini beroperasi dalam <strong>Mod Penyelidikan & Rujukan Manual Sahaja</strong>. Tiada kunci API disimpan dalam telefon dan tiada order automatik dihantar ke Binance Live sehingga strategi, ujian Demo hujung-ke-hujung, dan perlindungan SL/TP lulus sepenuhnya.
+        </div>
       </div>
 
       <div class="card">
-        <div style="font-weight:800;font-size:14px;margin-bottom:6px;">📌 Kenapa Top 3 Auto-Tapis Coin Modal Kecil</div>
+        <div style="font-weight:800;font-size:14px;margin-bottom:6px;">🛡️ Polisi 3 Posisi & Kawalan Korelasi</div>
         <div style="font-size:12px;color:var(--muted);line-height:1.55;">
-          • <strong>BTCUSDT</strong> perlukan minimum <strong>$100 Notional</strong> di Binance (0.001 BTC). Untuk modal bawah ~$300 pada risiko 0.5%, BTC tidak lepas had minimum dan akan ditolak keluar dari Top 3 secara automatik.<br>
-          • <strong>ETHUSDT</strong> perlukan minimum <strong>$20 Notional</strong>.<br>
-          • <strong>Altcoin ($5 Min):</strong> SOL, XRP, SUI, LINK, AVAX, UNI, BNB, AAVE jauh lebih tepat untuk modal $150–$500 supaya kuantiti sentiasa sah di Binance tanpa perlu besarkan risiko.
+          • <strong>Pemilihan Dinamik 10 Coin:</strong> BTC, ETH, SOL, BNB, LINK, AAVE, XRP, AVAX, SUI, UNI diimbas semula setiap masa — tiada 3 coin tetap.<br>
+          • <strong>Tidak Paksa Cukup 3:</strong> Jika cuma 0, 1, atau 2 coin benar-benar lulus semua syarat, paparan <em>Posisi Layak Dibuka</em> hanya tunjuk sebanyak itu sahaja.<br>
+          • <strong>Had Risiko Portfolio 0.50% Gabungan:</strong> Jika 2 posisi serentak dibuka, bajet dibahagi (cth 0.27% + 0.23% = 0.50%). Jika 3 posisi serentak, dibahagi (cth 0.20% + 0.16% + 0.14% = 0.50%) — <strong>bukan 0.50% × 3</strong>.<br>
+          • <strong>Semakan Min Order Selepas Agihan:</strong> Setiap pecahan risiko disemak semula terhadap <code>minNotional</code> Binance ($100 BTC, $20 ETH, $5 Altcoin). Jika pecahan terlalu kecil, slot berlebihan digugurkan automatik.<br>
+          • <strong>Korelasi BTC/ETH/Altcoin:</strong> Pasangan arah sama dengan korelasi Pearson 4H <code>r ≥ 0.80</code> disekat supaya satu kejatuhan BTC tidak melanggar 3 SL serentak.
         </div>
+      </div>
+
+      <div class="card">
+        <div style="font-weight:800;font-size:14px;margin-bottom:6px;">✅ Semakan Disiplin Manual</div>
+        <label class="check-item"><input type="checkbox" /> <span>Status data atas menunjukkan <strong>✅ Binance Futures Disahkan</strong> (bukan data usang).</span></label>
+        <label class="check-item"><input type="checkbox" /> <span>Hanya masuk coin di bahagian <strong>✅ Posisi Layak Dibuka</strong> (jangan masuk Calon Pantauan).</span></label>
+        <label class="check-item"><input type="checkbox" /> <span>Tetapan Binance: <strong>ISOLATED</strong>, Leverage <strong>≤ 5×</strong>, Mode <strong>One-Way</strong>.</span></label>
+        <label class="check-item"><input type="checkbox" /> <span>Pasang <strong>Stop Loss (Mark Price)</strong> terus — jangan pernah biarkan posisi tanpa SL.</span></label>
+        <button class="btn btn-sec" style="width:100%;margin-top:8px;" onclick="resetChecklist()">Reset Semakan</button>
       </div>
     </section>
   </div>
@@ -309,7 +395,7 @@
   <div id="detail-modal" class="modal-bg" onclick="if(event.target===this) closeModal()">
     <div class="modal-sheet">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <strong style="font-size:15px;">Perincian Analisis Coin</strong>
+        <strong style="font-size:15px;">Perincian Penuh Analisis Coin</strong>
         <button class="btn btn-sec" style="padding:6px 12px;" onclick="closeModal()">Tutup</button>
       </div>
       <div id="modal-body"></div>
@@ -319,10 +405,10 @@
   <div id="toast" class="toast">Disalin!</div>
 
   <nav class="bottom-nav">
-    <button class="nav-btn active" onclick="switchTab('top3', this)"><span class="nav-ico">🎯</span>Top 3</button>
+    <button class="nav-btn active" onclick="switchTab('top3', this)"><span class="nav-ico">🎯</span>Peluang</button>
     <button class="nav-btn" onclick="switchTab('scanner', this)"><span class="nav-ico">📡</span>10 Coin</button>
-    <button class="nav-btn" onclick="switchTab('paper', this)"><span class="nav-ico">📝</span>Paper</button>
-    <button class="nav-btn" onclick="switchTab('rules', this)"><span class="nav-ico">🛡️</span>Disiplin</button>
+    <button class="nav-btn" onclick="switchTab('paper', this)"><span class="nav-ico">📝</span>Aktif/Paper</button>
+    <button class="nav-btn" onclick="switchTab('rules', this)"><span class="nav-ico">🛡️</span>Risiko</button>
   </nav>
 
   <script>
@@ -330,6 +416,12 @@
       "BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT", "LINKUSDT",
       "AAVEUSDT", "XRPUSDT", "AVAXUSDT", "SUIUSDT", "UNIUSDT"
     ];
+
+    const CLUSTER_MAP = {
+      BTCUSDT: "MAJOR", ETHUSDT: "MAJOR",
+      SOLUSDT: "L1_ALT", BNBUSDT: "L1_ALT", AVAXUSDT: "L1_ALT", SUIUSDT: "L1_ALT", XRPUSDT: "L1_ALT",
+      LINKUSDT: "DEFI_ALT", AAVEUSDT: "DEFI_ALT", UNIUSDT: "DEFI_ALT"
+    };
 
     const FALLBACK_FILTERS = {
       BTCUSDT:  { tickSize: 0.1,    stepSize: 0.001, minQty: 0.001, minNotional: 100 },
@@ -344,38 +436,44 @@
       UNIUSDT:  { tickSize: 0.001,  stepSize: 0.1,   minQty: 0.1,   minNotional: 5 }
     };
 
-    const ENDPOINTS = [
-      { name: "Binance Futures (fapi)", base: "https://fapi.binance.com", futures: true },
-      { name: "Binance Futures Mirror 1", base: "https://fapi1.binance.com", futures: true },
-      { name: "Binance Futures Mirror 2", base: "https://fapi2.binance.com", futures: true },
-      { name: "Binance Vision (Fallback)", base: "https://data-api.binance.vision", futures: false }
+    // STRICTLY Binance Futures USD-M endpoints (never silently substitute unverified spot prices for futures signals)
+    const FUTURES_ENDPOINTS = [
+      { name: "Binance Futures (fapi)", base: "https://fapi.binance.com" },
+      { name: "Binance Futures Mirror 1", base: "https://fapi1.binance.com" },
+      { name: "Binance Futures Mirror 2", base: "https://fapi2.binance.com" }
     ];
 
     let liveFilters = JSON.parse(JSON.stringify(FALLBACK_FILTERS));
-    let activeEndpoint = null;
-    let scanResults = [];
+    let dataVerification = { verified: false, source: "", driftMs: 0, staleMinutes: 0, reason: "Belum diimbas" };
+    let rawEvaluations = [];       // All 10 evaluated coins
+    let corrMatrix = {};           // corrMatrix[symA][symB] = Pearson r
+    let portfolioPlan = { ready: [], watchlist: [], usedRiskUsdt: 0, newRiskUsdt: 0, totalCapUsdt: 0, activeCount: 0 };
     let currentFilter = "ALL";
 
+    // --- Preferences & Storage ---
     function loadPrefs() {
-      const saved = JSON.parse(localStorage.getItem("vet_v21_prefs") || "{}");
+      const saved = JSON.parse(localStorage.getItem("vet_v3_prefs") || "{}");
       if (saved.equity) document.getElementById("inp-equity").value = saved.equity;
-      if (saved.risk) document.getElementById("inp-risk").value = saved.risk;
+      if (saved.risk) document.getElementById("inp-risk").value = Math.min(0.005, saved.risk).toFixed(4);
       if (saved.lev) document.getElementById("inp-lev").value = saved.lev;
     }
 
     function getPrefs() {
       const equity = Math.max(10, parseFloat(document.getElementById("inp-equity").value) || 188);
-      const risk = Math.min(0.01, Math.max(0.001, parseFloat(document.getElementById("inp-risk").value) || 0.005));
+      // HARD CAP: Total portfolio risk across ALL active positions <= 0.50% (0.0050)
+      const totalRiskCap = Math.min(0.0050, Math.max(0.0010, parseFloat(document.getElementById("inp-risk").value) || 0.0050));
       const lev = Math.min(5, Math.max(1, parseInt(document.getElementById("inp-lev").value) || 5));
-      return { equity, risk, lev };
+      return { equity, totalRiskCap, lev };
     }
 
-    function savePrefsAndRender() {
-      localStorage.setItem("vet_v21_prefs", JSON.stringify(getPrefs()));
-      if (scanResults.length) {
-        sortResults();
-        renderTop3();
-        renderScannerList();
+    function savePrefsAndRecompute() {
+      const p = getPrefs();
+      localStorage.setItem("vet_v3_prefs", JSON.stringify({ equity: p.equity, risk: p.totalRiskCap, lev: p.lev }));
+      if (rawEvaluations.length) {
+        buildPortfolioPlan();
+        renderAllViews();
+      } else {
+        updateBudgetBar();
       }
     }
 
@@ -383,7 +481,7 @@
       const t = document.getElementById("toast");
       t.textContent = msg;
       t.style.display = "block";
-      setTimeout(() => { t.style.display = "none"; }, 2200);
+      setTimeout(() => { t.style.display = "none"; }, 2300);
     }
 
     function stepDecimals(step) {
@@ -392,31 +490,26 @@
       const parts = s.split(".");
       return parts.length > 1 ? parts[1].replace(/0+$/, "").length : 0;
     }
-
     function floorStep(val, step) {
       if (!step || step <= 0) return val;
       const dec = stepDecimals(step);
       return Number((Math.floor((val + 1e-12) / step) * step).toFixed(dec));
     }
-
     function ceilStep(val, step) {
       if (!step || step <= 0) return val;
       const dec = stepDecimals(step);
       return Number((Math.ceil((val - 1e-12) / step) * step).toFixed(dec));
     }
-
     function roundTick(val, symbol) {
       const f = liveFilters[symbol] || FALLBACK_FILTERS[symbol];
       return floorStep(val, f.tickSize);
     }
-
     function fmtPrice(val, symbol) {
       if (!isFinite(val)) return "-";
       const f = liveFilters[symbol] || FALLBACK_FILTERS[symbol];
       const dec = f ? stepDecimals(f.tickSize) : (val >= 100 ? 2 : 4);
       return val.toFixed(dec);
     }
-
     function fmtQty(val, symbol) {
       if (!isFinite(val) || val <= 0) return "0";
       const f = liveFilters[symbol] || FALLBACK_FILTERS[symbol];
@@ -424,7 +517,7 @@
       return val.toFixed(dec);
     }
 
-    // --- Technical Indicators (Closed Candles Only) ---
+    // --- Technical Indicators & Pearson Correlation ---
     function calcEMA(values, period) {
       const k = 2 / (period + 1);
       const out = new Array(values.length);
@@ -460,23 +553,55 @@
       return atr;
     }
 
+    function calcLogReturns(closes, lookback = 48) {
+      const slice = closes.slice(-(lookback + 1));
+      const rets = [];
+      for (let i = 1; i < slice.length; i++) {
+        rets.push(Math.log(Math.max(slice[i], 1e-9) / Math.max(slice[i - 1], 1e-9)));
+      }
+      return rets;
+    }
+
+    function pearsonCorr(a, b) {
+      const n = Math.min(a.length, b.length);
+      if (n < 12) return 0;
+      const xa = a.slice(-n), yb = b.slice(-n);
+      const ma = xa.reduce((s, v) => s + v, 0) / n;
+      const mb = yb.reduce((s, v) => s + v, 0) / n;
+      let num = 0, da = 0, db = 0;
+      for (let i = 0; i < n; i++) {
+        const dx = xa[i] - ma, dy = yb[i] - mb;
+        num += dx * dy; da += dx * dx; db += dy * dy;
+      }
+      const den = Math.sqrt(da * db);
+      return den === 0 ? 0 : num / den;
+    }
+
+    function buildCorrelationMatrix(evals) {
+      const mat = {};
+      for (const a of evals) {
+        mat[a.symbol] = {};
+        for (const b of evals) {
+          mat[a.symbol][b.symbol] = a.symbol === b.symbol ? 1.0 : pearsonCorr(a.returns4h, b.returns4h);
+        }
+      }
+      return mat;
+    }
+
     function parseKlines(raw) {
       return raw.map(k => ({
-        openTime: Number(k[0]),
-        open: parseFloat(k[1]),
-        high: parseFloat(k[2]),
-        low: parseFloat(k[3]),
-        close: parseFloat(k[4]),
-        volume: parseFloat(k[5]),
+        openTime: Number(k[0]), open: parseFloat(k[1]), high: parseFloat(k[2]),
+        low: parseFloat(k[3]), close: parseFloat(k[4]), volume: parseFloat(k[5]),
         closeTime: Number(k[6])
       }));
     }
 
-    // --- STRICT 1D + 4H + 1H ANALYSIS ENGINE ---
-    function analyzeCoin(symbol, k1dRaw, k4hRaw, k1hRaw, markPrice, fundingRate, change24h) {
-      const d1 = parseKlines(k1dRaw).slice(0, -1);
-      const h4 = parseKlines(k4hRaw).slice(0, -1);
-      const h1 = parseKlines(k1hRaw).slice(0, -1);
+    // --- 1D TREND + 4H SETUP ANALYSIS (STRICT CLOSED CANDLES) ---
+    function analyzeCoin(symbol, k1dRaw, k4hRaw, markPrice, fundingRate, change24h, serverTimeMs) {
+      const d1 = parseKlines(k1dRaw).slice(0, -1); // closed 1D bars
+      const h4 = parseKlines(k4hRaw).slice(0, -1); // closed 4H bars
+      const lastClosed4hCloseTime = h4[h4.length - 1].closeTime;
+      const candleAgeMin = Math.max(0, Math.round((serverTimeMs - lastClosed4hCloseTime) / 60000));
 
       const d1C = d1.map(c => c.close);
       const d1E20 = calcEMA(d1C, 20);
@@ -499,13 +624,7 @@
       const e50_4h = h4E50[h4E50.length - 1];
       const rsi4h = calcRSI(h4C, 14);
       const atr4h = calcATR(h4, 14);
-
-      // 1H momentum & micro-structure filter (stops entering against 1H dump/pump)
-      const h1C = h1.map(c => c.close);
-      const h1E20 = calcEMA(h1C, 20);
-      const last1h = h1[h1.length - 1];
-      const prev1h = h1[h1.length - 2];
-      const e20_1h = h1E20[h1E20.length - 1];
+      const returns4h = calcLogReturns(h4C, 48);
 
       const recentVols = h4.slice(-20).map(c => c.volume);
       const avgVol = recentVols.reduce((a, b) => a + b, 0) / Math.max(1, recentVols.length);
@@ -518,65 +637,69 @@
 
       const gates = {
         trend1dOk: false,
-        struct4hOk: false,
-        confirm1hOk: false,
+        setup4hOk: false,
+        candleBodyOk: false,
         roomToSrOk: false,
         momentumOk: false
       };
 
       let bias = trend1d === "BEARISH" ? "SHORT" : (trend1d === "BULLISH" ? "LONG" : "NONE");
-      let signal = "WAIT";
+      let techQualified = false;
       let score = 0;
+      let positives = [];
       let failReasons = [];
       let triggerHint = "";
-      let entryRef = null, slRef = null, tp1Ref = null, tp2Ref = null, rrToSr = 0;
+      let entryRef = null, slRef = null, tp1Ref = null, tp2Ref = null, rrToSr = 0, rrTp2 = 2.2;
 
       if (trend1d === "BULLISH") {
         gates.trend1dOk = true;
         score += 20;
+        positives.push("Trend 1D BULLISH kukuh (harga & EMA20 > EMA50)");
 
-        // 4H structure + pullback without overextension
-        const distFromEma = (markPrice - e20_4h) / Math.max(atr4h, 1e-9);
-        const h4Aligned = (e20_4h > e50_4h) && (last4h.close > e20_4h) && (markPrice >= e20_4h * 0.994);
-        const notChasing = distFromEma >= -0.25 && distFromEma <= 1.35;
-        if (h4Aligned && notChasing) {
-          gates.struct4hOk = true;
+        const distEma = (markPrice - e20_4h) / Math.max(atr4h, 1e-9);
+        const aligned4h = (e20_4h > e50_4h) && (last4h.close > e20_4h) && (markPrice >= e20_4h * 0.994);
+        const pullbackZone = (last4h.low <= e20_4h * 1.015 || prev4h.low <= e20_4h * 1.015) && distEma >= -0.25 && distEma <= 1.4;
+
+        if (aligned4h && pullbackZone) {
+          gates.setup4hOk = true;
           score += 20;
-        } else if (!h4Aligned) {
-          failReasons.push("Struktur 4H belum selari bullish (elak tangkap pisau jatuh)");
-          triggerHint = `Tunggu 4H tutup di atas EMA20 ($${fmtPrice(e20_4h, symbol)}) & EMA20 > EMA50`;
+          positives.push("Setup 4H selari bullish dengan pullback bersih ke zon EMA20");
+        } else if (!aligned4h) {
+          failReasons.push("Struktur 4H belum selari bullish (EMA20/harga di bawah struktur 4H)");
+          triggerHint = `Tunggu candle 4H tutup di atas EMA20 ($${fmtPrice(e20_4h, symbol)}) & EMA20 > EMA50`;
         } else {
-          failReasons.push(`Harga terlalu jauh dari EMA20 4H (${distFromEma.toFixed(1)}× ATR — jangan kejar pucuk)`);
-          triggerHint = `Tunggu pullback dekat zon Limit EMA20 4H ($${fmtPrice(e20_4h, symbol)})`;
+          failReasons.push(`Harga jauh dari EMA20 4H (${distEma.toFixed(1)}× ATR — elak kejar pucuk)`);
+          triggerHint = `Tunggu pullback semula ke zon EMA20 4H ($${fmtPrice(e20_4h, symbol)})`;
         }
 
-        // 1H confirmation: closed 1H candle above 1H EMA20 & not dumping
-        const h1Confirm = (last1h.close > e20_1h) && (last1h.close >= prev1h.close * 0.998) && (last1h.close > last1h.open);
-        if (h1Confirm) {
-          gates.confirm1hOk = true;
+        const bullishClose = (last4h.close > last4h.open) && (last4h.close > prev4h.close);
+        if (bullishClose) {
+          gates.candleBodyOk = true;
           score += 20;
+          positives.push("Penutupan candle 4H bullish mengesahkan tekanan beli");
         } else {
-          failReasons.push("Candle 1H belum sahkan momentum naik (tunggu 1H tutup hijau di atas EMA20 1H)");
-          triggerHint = triggerHint || `Tunggu candle 1H hijau tutup di atas $${fmtPrice(e20_1h, symbol)}`;
+          failReasons.push("Candle 4H tertutup terakhir belum menunjukkan penutupan bullish bersih");
+          triggerHint = triggerHint || `Tunggu candle 4H hijau tutup melebihi $${fmtPrice(last4h.high, symbol)}`;
         }
 
-        // Limit Entry slightly at pullback or mark (never chasing above mark)
-        const limitEntry = Math.min(markPrice, Math.max(e20_4h, markPrice - 0.15 * atr4h));
+        // Entry slightly at pullback limit or mark
+        const limitEntry = Math.min(markPrice, Math.max(e20_4h, markPrice - 0.12 * atr4h));
         entryRef = roundTick(limitEntry, symbol);
         const rawSl = Math.min(localLow - 0.35 * atr4h, entryRef - 1.15 * atr4h);
         const clampedDist = Math.min(Math.max(entryRef - rawSl, 1.0 * atr4h), 2.3 * atr4h);
         slRef = roundTick(entryRef - clampedDist, symbol);
-        const actualDist = Math.max(entryRef - slRef, 1e-9);
-        tp1Ref = roundTick(entryRef + 1.5 * actualDist, symbol);
-        tp2Ref = roundTick(entryRef + 2.2 * actualDist, symbol);
+        const dist = Math.max(entryRef - slRef, 1e-9);
+        tp1Ref = roundTick(entryRef + 1.5 * dist, symbol);
+        tp2Ref = roundTick(entryRef + 2.2 * dist, symbol);
+        rrTp2 = (tp2Ref - entryRef) / dist;
 
-        // Room to 4H resistance >= 1.25R
-        rrToSr = (majorHigh - entryRef) / actualDist;
+        rrToSr = (majorHigh - entryRef) / dist;
         if (rrToSr >= 1.25 || entryRef >= majorHigh * 0.998) {
           gates.roomToSrOk = true;
           score += 20;
+          positives.push(`Ruang bebas ke resistance 4H mencukupi (${rrToSr.toFixed(1)}R)`);
         } else {
-          failReasons.push(`Terlalu rapat ke resistance 4H ($${fmtPrice(majorHigh, symbol)}) — ruang cuma ${rrToSr.toFixed(2)}R`);
+          failReasons.push(`Terlalu hampir dengan resistance 4H ($${fmtPrice(majorHigh, symbol)}) — ruang cuma ${rrToSr.toFixed(2)}R`);
         }
 
         const rsiOk = rsi4h >= 44 && rsi4h <= 66;
@@ -585,58 +708,63 @@
         if (rsiOk && volOk && fundOk) {
           gates.momentumOk = true;
           score += 20;
+          positives.push(`RSI 4H (${rsi4h.toFixed(1)}), volume (${volRatio.toFixed(2)}×) & funding sihat`);
         } else {
-          if (!rsiOk) failReasons.push(`RSI 4H (${rsi4h.toFixed(1)}) di luar zon sihat 44–66`);
-          if (!volOk) failReasons.push(`Volume 4H perlahan (${volRatio.toFixed(2)}× purata)`);
-          if (!fundOk) failReasons.push(`Funding tinggi (+${(fundingRate * 100).toFixed(3)}%)`);
+          if (!rsiOk) failReasons.push(`RSI 4H (${rsi4h.toFixed(1)}) di luar zon 44–66`);
+          if (!volOk) failReasons.push(`Volume 4H perlahan (${volRatio.toFixed(2)}×)`);
+          if (!fundOk) failReasons.push(`Funding tinggi (+${(fundingRate * 100).toFixed(3)}%) — risiko squeeze`);
         }
 
-        if (gates.trend1dOk && gates.struct4hOk && gates.confirm1hOk && gates.roomToSrOk && gates.momentumOk) {
-          signal = "LONG_SETUP";
-        }
+        techQualified = gates.trend1dOk && gates.setup4hOk && gates.candleBodyOk && gates.roomToSrOk && gates.momentumOk;
 
       } else if (trend1d === "BEARISH") {
         gates.trend1dOk = true;
         score += 20;
+        positives.push("Trend 1D BEARISH kukuh (harga & EMA20 < EMA50)");
 
-        const distFromEma = (e20_4h - markPrice) / Math.max(atr4h, 1e-9);
-        const h4Aligned = (e20_4h < e50_4h) && (last4h.close < e20_4h) && (markPrice <= e20_4h * 1.006);
-        const notChasing = distFromEma >= -0.25 && distFromEma <= 1.35;
-        if (h4Aligned && notChasing) {
-          gates.struct4hOk = true;
+        const distEma = (e20_4h - markPrice) / Math.max(atr4h, 1e-9);
+        const aligned4h = (e20_4h < e50_4h) && (last4h.close < e20_4h) && (markPrice <= e20_4h * 1.006);
+        const pullbackZone = (last4h.high >= e20_4h * 0.985 || prev4h.high >= e20_4h * 0.985) && distEma >= -0.25 && distEma <= 1.4;
+
+        if (aligned4h && pullbackZone) {
+          gates.setup4hOk = true;
           score += 20;
-        } else if (!h4Aligned) {
+          positives.push("Setup 4H selari bearish dengan retrace/rejection bersih di EMA20");
+        } else if (!aligned4h) {
           failReasons.push("Struktur 4H belum selari bearish (elak short lawan rebound)");
-          triggerHint = `Tunggu 4H tutup bawah EMA20 ($${fmtPrice(e20_4h, symbol)}) & EMA20 < EMA50`;
+          triggerHint = `Tunggu candle 4H tutup bawah EMA20 ($${fmtPrice(e20_4h, symbol)}) & EMA20 < EMA50`;
         } else {
-          failReasons.push(`Harga sudah terlalu jauh jatuh (${distFromEma.toFixed(1)}× ATR — jangan kejar dasar)`);
-          triggerHint = `Tunggu retrace naik ke zon Limit EMA20 4H ($${fmtPrice(e20_4h, symbol)})`;
+          failReasons.push(`Harga sudah terlalu jauh jatuh (${distEma.toFixed(1)}× ATR — elak kejar dasar)`);
+          triggerHint = `Tunggu retrace naik ke zon EMA20 4H ($${fmtPrice(e20_4h, symbol)})`;
         }
 
-        const h1Confirm = (last1h.close < e20_1h) && (last1h.close <= prev1h.close * 1.002) && (last1h.close < last1h.open);
-        if (h1Confirm) {
-          gates.confirm1hOk = true;
+        const bearishClose = (last4h.close < last4h.open) && (last4h.close < prev4h.close);
+        if (bearishClose) {
+          gates.candleBodyOk = true;
           score += 20;
+          positives.push("Penutupan candle 4H bearish mengesahkan tekanan jual");
         } else {
-          failReasons.push("Candle 1H belum sahkan tekanan turun (tunggu 1H tutup merah bawah EMA20 1H)");
-          triggerHint = triggerHint || `Tunggu candle 1H merah tutup bawah $${fmtPrice(e20_1h, symbol)}`;
+          failReasons.push("Candle 4H tertutup terakhir belum menunjukkan penutupan bearish kukuh");
+          triggerHint = triggerHint || `Tunggu candle 4H merah tutup bawah $${fmtPrice(last4h.low, symbol)}`;
         }
 
-        const limitEntry = Math.max(markPrice, Math.min(e20_4h, markPrice + 0.15 * atr4h));
+        const limitEntry = Math.max(markPrice, Math.min(e20_4h, markPrice + 0.12 * atr4h));
         entryRef = roundTick(limitEntry, symbol);
         const rawSl = Math.max(localHigh + 0.35 * atr4h, entryRef + 1.15 * atr4h);
         const clampedDist = Math.min(Math.max(rawSl - entryRef, 1.0 * atr4h), 2.3 * atr4h);
         slRef = roundTick(entryRef + clampedDist, symbol);
-        const actualDist = Math.max(slRef - entryRef, 1e-9);
-        tp1Ref = roundTick(entryRef - 1.5 * actualDist, symbol);
-        tp2Ref = roundTick(entryRef - 2.2 * actualDist, symbol);
+        const dist = Math.max(slRef - entryRef, 1e-9);
+        tp1Ref = roundTick(entryRef - 1.5 * dist, symbol);
+        tp2Ref = roundTick(entryRef - 2.2 * dist, symbol);
+        rrTp2 = (entryRef - tp2Ref) / dist;
 
-        rrToSr = (entryRef - majorLow) / actualDist;
+        rrToSr = (entryRef - majorLow) / dist;
         if (rrToSr >= 1.25 || entryRef <= majorLow * 1.002) {
           gates.roomToSrOk = true;
           score += 20;
+          positives.push(`Ruang bebas ke support 4H mencukupi (${rrToSr.toFixed(1)}R)`);
         } else {
-          failReasons.push(`Terlalu rapat ke support 4H ($${fmtPrice(majorLow, symbol)}) — ruang cuma ${rrToSr.toFixed(2)}R`);
+          failReasons.push(`Terlalu hampir dengan support 4H ($${fmtPrice(majorLow, symbol)}) — ruang cuma ${rrToSr.toFixed(2)}R`);
         }
 
         const rsiOk = rsi4h >= 34 && rsi4h <= 56;
@@ -645,83 +773,259 @@
         if (rsiOk && volOk && fundOk) {
           gates.momentumOk = true;
           score += 20;
+          positives.push(`RSI 4H (${rsi4h.toFixed(1)}), volume (${volRatio.toFixed(2)}×) & funding selari`);
         } else {
-          if (!rsiOk) failReasons.push(`RSI 4H (${rsi4h.toFixed(1)}) di luar zon ideal 34–56`);
-          if (!volOk) failReasons.push(`Volume 4H perlahan (${volRatio.toFixed(2)}× purata)`);
+          if (!rsiOk) failReasons.push(`RSI 4H (${rsi4h.toFixed(1)}) di luar zon 34–56`);
+          if (!volOk) failReasons.push(`Volume 4H perlahan (${volRatio.toFixed(2)}×)`);
           if (!fundOk) failReasons.push(`Funding terlalu negatif (${(fundingRate * 100).toFixed(3)}%)`);
         }
 
-        if (gates.trend1dOk && gates.struct4hOk && gates.confirm1hOk && gates.roomToSrOk && gates.momentumOk) {
-          signal = "SHORT_SETUP";
-        }
+        techQualified = gates.trend1dOk && gates.setup4hOk && gates.candleBodyOk && gates.roomToSrOk && gates.momentumOk;
+
       } else {
-        failReasons.push("Trend 1D SIDEWAYS / NEUTRAL — pasaran tiada arah jelas, kekal tunai");
+        failReasons.push("Trend 1D NEUTRAL / Sideways — tiada arah dominan, kekal WAIT");
         triggerHint = `Tunggu 1D pecah struktur atas $${fmtPrice(majorHigh, symbol)} atau bawah $${fmtPrice(majorLow, symbol)}`;
       }
 
       return {
-        symbol, trend1d, bias, signal, score,
-        markPrice, change24h,
-        entryRef, slRef, tp1Ref, tp2Ref,
-        ema20_4h: e20_4h, ema50_4h: e50_4h, ema20_1h: e20_1h,
-        rsi4h, atr4h, volRatio, fundingRate,
-        majorHigh, majorLow, rrToSr,
-        gates, failReasons, triggerHint
+        symbol, cluster: CLUSTER_MAP[symbol] || "ALT",
+        trend1d, bias, techQualified, score,
+        markPrice, change24h, candleAgeMin,
+        entryRef, slRef, tp1Ref, tp2Ref, rrToSr, rrTp2,
+        ema20_4h: e20_4h, ema50_4h: e50_4h, rsi4h, atr4h, volRatio, fundingRate,
+        majorHigh, majorLow, returns4h,
+        gates, positives, failReasons, triggerHint
       };
     }
 
-    // --- EXACT BINANCE FUTURES SIZING & MIN-NOTIONAL VALIDATOR ---
-    function computeSizing(item) {
-      const { equity, risk, lev } = getPrefs();
-      const f = liveFilters[item.symbol] || FALLBACK_FILTERS[item.symbol];
-      // Even for NEUTRAL coins, check basic minNotional affordability against equity
-      const refPrice = item.entryRef || item.markPrice;
-      const refDist = item.slRef ? Math.abs(refPrice - item.slRef) : Math.max(item.atr4h * 1.4, refPrice * 0.018);
+    // --- ACTIVE POSITIONS / PAPER LAB STORAGE ---
+    function getPaperState() {
+      return JSON.parse(localStorage.getItem("vet_v3_paper") || '{"balance":1000,"trades":[]}');
+    }
+    function setPaperState(st) {
+      localStorage.setItem("vet_v3_paper", JSON.stringify(st));
+    }
+    function getActivePositions() {
+      return getPaperState().trades.filter(t => t.status === "OPEN");
+    }
 
-      const targetRiskUsdt = equity * risk;
-      let rawQty = refDist > 0 ? targetRiskUsdt / refDist : 0;
-      const maxNotional = equity * lev * 0.90;
-      if (rawQty * refPrice > maxNotional) rawQty = maxNotional / refPrice;
+    // --- PORTFOLIO ALLOCATION ENGINE (MAX 0.50% TOTAL + CORRELATION GUARD + BINANCE MIN ORDER) ---
+    function sizeForRiskBudget(item, riskBudgetUsdt, equity, lev, totalActiveSlotsAfter) {
+      const f = liveFilters[item.symbol] || FALLBACK_FILTERS[item.symbol];
+      if (!item.entryRef || !item.slRef) return { eligible: false, minNotional: f.minNotional, reason: "Tiada struktur SL" };
+      const stopDist = Math.abs(item.entryRef - item.slRef);
+      if (stopDist <= 0) return { eligible: false, minNotional: f.minNotional, reason: "Jarak SL sifar" };
+
+      let rawQty = riskBudgetUsdt / stopDist;
+      // Split isolated margin safely across concurrent positions
+      const maxSlotNotional = (equity * lev * 0.90) / Math.max(1, totalActiveSlotsAfter);
+      if (rawQty * item.entryRef > maxSlotNotional) rawQty = maxSlotNotional / item.entryRef;
 
       const qty = floorStep(rawQty, f.stepSize);
-      const notional = qty * refPrice;
+      const notional = qty * item.entryRef;
       const margin = notional / lev;
-      const actualLoss = qty * refDist;
-      const estFee = notional * 0.001;
-      const tp1Profit = item.tp1Ref ? (qty * Math.abs(item.tp1Ref - refPrice) - estFee) : 0;
-      const tp2Profit = item.tp2Ref ? (qty * Math.abs(item.tp2Ref - refPrice) - estFee) : 0;
-      const slPct = (refDist / refPrice) * 100;
+      const actualRiskUsdt = qty * stopDist;
+      const estFee = notional * 0.001; // 0.1% round-trip taker estimate
+      const tp1Profit = qty * Math.abs(item.tp1Ref - item.entryRef) - estFee;
+      const tp2Profit = qty * Math.abs(item.tp2Ref - item.entryRef) - estFee;
+      const slPct = (stopDist / item.entryRef) * 100;
 
-      const minQtyForNotional = ceilStep(f.minNotional / refPrice, f.stepSize);
-      const effectiveMinQty = Math.max(f.minQty, minQtyForNotional);
-      const minReqNotional = effectiveMinQty * refPrice;
-      const minReqRiskUsdt = effectiveMinQty * refDist;
+      const minQtyNeed = Math.max(f.minQty, ceilStep(f.minNotional / item.entryRef, f.stepSize));
+      const minReqNotional = minQtyNeed * item.entryRef;
+      const minReqRiskUsdt = minQtyNeed * stopDist;
       const minReqRiskPct = (minReqRiskUsdt / equity) * 100;
-      const minEquityForCurrentRisk = minReqRiskUsdt / risk;
 
-      const eligible = (qty >= f.minQty) && (notional >= f.minNotional) && (margin <= equity * 0.95);
-
+      const eligible = (qty >= f.minQty) && (notional >= f.minNotional) && (margin <= equity * 0.90);
       return {
-        eligible, qty, notional, margin, actualLoss, estFee,
-        tp1Profit, tp2Profit, slPct, lev,
-        minNotional: f.minNotional, minQty: f.minQty,
-        effectiveMinQty, minReqNotional, minReqRiskUsdt, minReqRiskPct, minEquityForCurrentRisk
+        eligible, qty, notional, margin, actualRiskUsdt,
+        actualRiskPct: (actualRiskUsdt / equity) * 100,
+        estFee, tp1Profit, tp2Profit, slPct, lev,
+        minNotional: f.minNotional, minQtyNeed, minReqNotional, minReqRiskUsdt, minReqRiskPct
       };
     }
 
-    function sortResults() {
-      scanResults.sort((a, b) => {
-        const sa = computeSizing(a);
-        const sb = computeSizing(b);
-        // Priority 1: Actionable & Eligible for Binance Min Order
-        const aTier = (a.signal !== "WAIT" && sa.eligible) ? 3 : (sa.eligible ? 2 : (a.signal !== "WAIT" ? 1 : 0));
-        const bTier = (b.signal !== "WAIT" && sb.eligible) ? 3 : (sb.eligible ? 2 : (b.signal !== "WAIT" ? 1 : 0));
-        if (bTier !== aTier) return bTier - aTier;
+    function buildPortfolioPlan() {
+      const { equity, totalRiskCap, lev } = getPrefs();
+      const totalCapUsdt = equity * totalRiskCap; // Strictly <= 0.50% of account balance
+      const active = getActivePositions();
+      const usedRiskUsdt = active.reduce((sum, t) => sum + Math.abs(t.entry - t.sl) * t.qty, 0);
+      const remainingRiskUsdt = Math.max(0, totalCapUsdt - usedRiskUsdt);
+      const remainingSlots = Math.max(0, 3 - active.length);
+
+      // Attach BTC/ETH correlation to every coin
+      for (const item of rawEvaluations) {
+        item.corrBtc = corrMatrix[item.symbol]?.BTCUSDT ?? 0;
+        item.corrEth = corrMatrix[item.symbol]?.ETHUSDT ?? 0;
+        item.statusCategory = "WATCHLIST"; // READY | WATCHLIST
+        item.blockReason = "";
+        item.corrNote = "";
+        item.allocation = null;
+      }
+
+      // Sort all 10 coins dynamically by technical quality + R:R room
+      const sorted = [...rawEvaluations].sort((a, b) => {
+        if (b.techQualified !== a.techQualified) return (b.techQualified ? 1 : 0) - (a.techQualified ? 1 : 0);
         if (b.score !== a.score) return b.score - a.score;
         return b.rrToSr - a.rrToSr;
       });
+
+      // If data is NOT verified from Binance Futures, block ALL actionable openings!
+      if (!dataVerification.verified) {
+        for (const item of sorted) {
+          item.blockReason = `Data Binance Futures tidak disahkan (${dataVerification.reason})`;
+        }
+        portfolioPlan = {
+          ready: [],
+          watchlist: sorted.slice(0, 3),
+          usedRiskUsdt, newRiskUsdt: 0, totalCapUsdt, activeCount: active.length
+        };
+        return;
+      }
+
+      // Step 1: Take technically qualified coins (not already open) & pre-check max single-slot Binance minNotional
+      const techPass = [];
+      const blockedPool = [];
+
+      for (const item of sorted) {
+        if (!item.techQualified) {
+          blockedPool.push(item);
+          continue;
+        }
+        if (active.some(p => p.symbol === item.symbol)) {
+          item.blockReason = "Posisi coin ini sudah aktif dalam portfolio anda";
+          blockedPool.push(item);
+          continue;
+        }
+        if (remainingSlots <= 0 || remainingRiskUsdt <= 0.01) {
+          item.blockReason = `Had portfolio penuh (${active.length}/3 slot atau bajet risiko 0.50% telah digunakan)`;
+          blockedPool.push(item);
+          continue;
+        }
+        // Check if coin can even pass Binance minNotional using remaining portfolio budget
+        const soloCheck = sizeForRiskBudget(item, remainingRiskUsdt, equity, lev, active.length + 1);
+        if (!soloCheck.eligible) {
+          item.blockReason = `Tak lepas minimum Binance ($${soloCheck.minNotional}) di bawah baki bajet risiko $${remainingRiskUsdt.toFixed(2)} (min perlukan risiko $${soloCheck.minReqRiskUsdt.toFixed(2)} / ${soloCheck.minReqRiskPct.toFixed(2)}%)`;
+          blockedPool.push(item);
+          continue;
+        }
+        techPass.push(item);
+      }
+
+      // Step 2: Correlation Guard (against Active Positions AND higher-ranked selected candidates)
+      const corrApproved = [];
+      for (const item of techPass) {
+        const peers = [
+          ...active.map(p => ({ symbol: p.symbol, bias: p.side })),
+          ...corrApproved.map(p => ({ symbol: p.symbol, bias: p.bias }))
+        ];
+        let highestSameDirR = 0;
+        let highestPeer = null;
+        let blockedByCorr = false;
+
+        for (const peer of peers) {
+          const r = corrMatrix[item.symbol]?.[peer.symbol] ?? 0;
+          if (item.bias === peer.bias) {
+            if (r > highestSameDirR) {
+              highestSameDirR = r;
+              highestPeer = peer.symbol;
+            }
+            if (r >= 0.80) {
+              item.blockReason = `DISEKAT KORELASI: Korelasi 4H tinggi (r = ${r.toFixed(2)} ≥ 0.80) arah sama ${item.bias} dengan ${peer.symbol} — elak gandakan risiko pasaran sama`;
+              blockedByCorr = true;
+              break;
+            }
+          }
+        }
+
+        if (blockedByCorr) {
+          blockedPool.push(item);
+        } else {
+          item.maxSameDirR = highestSameDirR;
+          item.highestPeer = highestPeer;
+          if (highestSameDirR >= 0.65) {
+            item.corrNote = `Korelasi sederhana-tinggi (r=${highestSameDirR.toFixed(2)} dgn ${highestPeer}) — potongan risiko 20%`;
+            item.corrHaircut = 0.80;
+          } else if (highestPeer) {
+            item.corrNote = `Korelasi rendah/terkawal (r=${highestSameDirR.toFixed(2)} dgn ${highestPeer})`;
+            item.corrHaircut = 1.0;
+          } else if (peers.length > 0) {
+            item.corrNote = `Arah bertentangan / lindung nilai semula jadi (hedge) dgn posisi lain`;
+            item.corrHaircut = 1.0;
+          } else {
+            item.corrNote = `Posisi utama (r vs BTC: ${item.corrBtc.toFixed(2)}, vs ETH: ${item.corrEth.toFixed(2)})`;
+            item.corrHaircut = 1.0;
+          }
+          corrApproved.push(item);
+        }
+      }
+
+      // Step 3: Allocate remaining <= 0.50% budget across up to remainingSlots (3 -> 2 -> 1)
+      // Re-verify Binance minNotional AFTER splitting so we NEVER suggest an unexecutable tiny size!
+      let working = corrApproved.slice(0, remainingSlots);
+      let finalReady = [];
+
+      while (working.length > 0) {
+        const n = working.length;
+        const weights = n === 1 ? [1.0] : (n === 2 ? [0.55, 0.45] : [0.40, 0.32, 0.28]);
+        let allValid = true;
+        const trial = [];
+
+        for (let i = 0; i < n; i++) {
+          const item = working[i];
+          const sliceBudget = remainingRiskUsdt * weights[i] * (item.corrHaircut || 1.0);
+          const alloc = sizeForRiskBudget(item, sliceBudget, equity, lev, active.length + n);
+          if (!alloc.eligible) {
+            allValid = false;
+            break;
+          }
+          trial.push({ item, alloc, sharePct: weights[i] * 100 });
+        }
+
+        if (allValid) {
+          for (const t of trial) {
+            t.item.statusCategory = "READY";
+            t.item.allocation = t.alloc;
+            t.item.budgetSharePct = t.sharePct;
+            finalReady.push(t.item);
+          }
+          break;
+        } else {
+          // Drop lowest-ranked coin from multi-slot split & push to watchlist
+          const dropped = working.pop();
+          dropped.blockReason = `Selepas agihan bajet risiko portfolio 0.50% merentas ${n} posisi, saiz slot ini jatuh bawah minimum Binance ($${(liveFilters[dropped.symbol]||FALLBACK_FILTERS[dropped.symbol]).minNotional})`;
+          blockedPool.unshift(dropped);
+        }
+      }
+
+      // Also move any remaining corrApproved beyond remainingSlots to watchlist
+      for (const extra of corrApproved.slice(remainingSlots)) {
+        extra.blockReason = "Had maksimum 3 posisi serentak telah dipenuhi oleh calon lebih tinggi";
+        blockedPool.unshift(extra);
+      }
+
+      const newRiskUsdt = finalReady.reduce((s, it) => s + it.allocation.actualRiskUsdt, 0);
+      // Watchlist: up to 3 best NON-ready candidates (never duplicate ready coins)
+      const readySyms = new Set(finalReady.map(x => x.symbol));
+      const watchlist = blockedPool
+        .filter(x => !readySyms.has(x.symbol))
+        .sort((a, b) => {
+          // Prioritize technically qualified coins that only got blocked by corr/budget, then highest score
+          if (b.techQualified !== a.techQualified) return (b.techQualified ? 1 : 0) - (a.techQualified ? 1 : 0);
+          return b.score - a.score;
+        })
+        .slice(0, 3);
+
+      portfolioPlan = {
+        ready: finalReady,
+        watchlist,
+        usedRiskUsdt,
+        newRiskUsdt,
+        totalCapUsdt,
+        activeCount: active.length
+      };
     }
 
+    // --- LIVE BINANCE FUTURES VERIFICATION & FETCH ---
     async function fetchJson(url) {
       const ctrl = new AbortController();
       const t = setTimeout(() => ctrl.abort(), 9500);
@@ -734,78 +1038,102 @@
       }
     }
 
-    async function findEndpointAndFilters() {
-      for (const ep of ENDPOINTS) {
+    async function connectVerifiedFutures() {
+      for (const ep of FUTURES_ENDPOINTS) {
         try {
-          if (ep.futures) {
-            const ex = await fetchJson(ep.base + "/fapi/v1/exchangeInfo");
-            if (ex && Array.isArray(ex.symbols)) {
-              for (const s of ex.symbols) {
-                if (!COINS.includes(s.symbol)) continue;
-                const fm = {};
-                for (const fl of (s.filters || [])) fm[fl.filterType] = fl;
-                liveFilters[s.symbol] = {
-                  tickSize: parseFloat(fm.PRICE_FILTER?.tickSize || FALLBACK_FILTERS[s.symbol].tickSize),
-                  stepSize: parseFloat(fm.LOT_SIZE?.stepSize || FALLBACK_FILTERS[s.symbol].stepSize),
-                  minQty: parseFloat(fm.LOT_SIZE?.minQty || FALLBACK_FILTERS[s.symbol].minQty),
-                  minNotional: parseFloat(fm.MIN_NOTIONAL?.notional || FALLBACK_FILTERS[s.symbol].minNotional)
-                };
-              }
+          const t0 = Date.now();
+          const timeRes = await fetchJson(ep.base + "/fapi/v1/time");
+          const serverTime = Number(timeRes.serverTime);
+          const driftMs = Math.abs(serverTime - Date.now());
+
+          const ex = await fetchJson(ep.base + "/fapi/v1/exchangeInfo");
+          if (ex && Array.isArray(ex.symbols)) {
+            for (const s of ex.symbols) {
+              if (!COINS.includes(s.symbol)) continue;
+              const fm = {};
+              for (const fl of (s.filters || [])) fm[fl.filterType] = fl;
+              liveFilters[s.symbol] = {
+                tickSize: parseFloat(fm.PRICE_FILTER?.tickSize || FALLBACK_FILTERS[s.symbol].tickSize),
+                stepSize: parseFloat(fm.LOT_SIZE?.stepSize || FALLBACK_FILTERS[s.symbol].stepSize),
+                minQty: parseFloat(fm.LOT_SIZE?.minQty || FALLBACK_FILTERS[s.symbol].minQty),
+                minNotional: parseFloat(fm.MIN_NOTIONAL?.notional || FALLBACK_FILTERS[s.symbol].minNotional)
+              };
             }
-            return ep;
-          } else {
-            await fetchJson(ep.base + "/api/v3/time");
-            return ep;
           }
+          return { ep, serverTime, driftMs };
         } catch (e) {}
       }
-      throw new Error("Semua pelayan Binance gagal dihubungi daripada rangkaian anda.");
+      throw new Error("Tidak dapat hubungi pelayan rasmi Binance Futures (fapi/fapi1/fapi2).");
     }
 
-    async function fetchCoin(ep, symbol) {
-      const kPath = ep.futures ? "/fapi/v1/klines" : "/api/v3/klines";
-      const tPath = ep.futures ? "/fapi/v1/ticker/24hr" : "/api/v3/ticker/24hr";
-      const reqs = [
-        fetchJson(`${ep.base}${kPath}?symbol=${symbol}&interval=1d&limit=80`),
-        fetchJson(`${ep.base}${kPath}?symbol=${symbol}&interval=4h&limit=80`),
-        fetchJson(`${ep.base}${kPath}?symbol=${symbol}&interval=1h&limit=50`),
-        fetchJson(`${ep.base}${tPath}?symbol=${symbol}`)
-      ];
-      if (ep.futures) reqs.push(fetchJson(`${ep.base}/fapi/v1/premiumIndex?symbol=${symbol}`));
-      const [k1d, k4h, k1h, ticker, prem] = await Promise.all(reqs);
-      const markPrice = prem ? parseFloat(prem.markPrice) : parseFloat(ticker.lastPrice);
-      const fundingRate = prem ? parseFloat(prem.lastFundingRate) : null;
+    async function fetchCoinFutures(ep, symbol, serverTime) {
+      const [k1d, k4h, ticker, prem] = await Promise.all([
+        fetchJson(`${ep.base}/fapi/v1/klines?symbol=${symbol}&interval=1d&limit=80`),
+        fetchJson(`${ep.base}/fapi/v1/klines?symbol=${symbol}&interval=4h&limit=80`),
+        fetchJson(`${ep.base}/fapi/v1/ticker/24hr?symbol=${symbol}`),
+        fetchJson(`${ep.base}/fapi/v1/premiumIndex?symbol=${symbol}`)
+      ]);
+      const markPrice = parseFloat(prem.markPrice);
+      const fundingRate = parseFloat(prem.lastFundingRate);
       const change24h = parseFloat(ticker.priceChangePercent || 0);
-      return analyzeCoin(symbol, k1d, k4h, k1h, markPrice, fundingRate, change24h);
+      return analyzeCoin(symbol, k1d, k4h, markPrice, fundingRate, change24h, serverTime);
     }
 
     async function scanMarket() {
       const btn = document.getElementById("btn-scan");
-      const statusEl = document.getElementById("feed-status");
+      const badge = document.getElementById("verify-badge");
+      const meta = document.getElementById("verify-meta");
       const errBox = document.getElementById("error-container");
       btn.disabled = true;
       btn.textContent = "⏳ Mengimbas...";
       errBox.innerHTML = "";
+      badge.textContent = "Mengesahkan data Binance Futures...";
+      badge.className = "";
 
       try {
-        statusEl.textContent = "Memuat turun syarat minimum order Binance...";
-        activeEndpoint = await findEndpointAndFilters();
-        statusEl.textContent = `Sumber: ${activeEndpoint.name} (1D+4H+1H + Filters)`;
-
-        const settled = await Promise.allSettled(COINS.map(sym => fetchCoin(activeEndpoint, sym)));
+        const { ep, serverTime, driftMs } = await connectVerifiedFutures();
+        const settled = await Promise.allSettled(COINS.map(sym => fetchCoinFutures(ep, sym, serverTime)));
         const ok = settled.filter(r => r.status === "fulfilled").map(r => r.value);
-        if (!ok.length) throw new Error("Tiada data candle berjaya dibaca.");
 
-        scanResults = ok;
-        sortResults();
+        if (ok.length < 8) {
+          throw new Error(`Hanya ${ok.length}/10 coin berjaya dibaca — data tidak lengkap untuk matriks korelasi.`);
+        }
+
+        const maxCandleAge = Math.max(...ok.map(x => x.candleAgeMin));
+        const isFresh = maxCandleAge <= 255; // <= 4h 15m from last closed 4H bar
+        const driftOk = driftMs <= 10000;
+
+        dataVerification = {
+          verified: isFresh && driftOk,
+          source: ep.name,
+          driftMs,
+          staleMinutes: maxCandleAge,
+          reason: !isFresh ? `Candle 4H usang (${maxCandleAge} minit)` : (!driftOk ? `Clock drift tinggi (${driftMs}ms)` : "Disahkan")
+        };
+
+        rawEvaluations = ok;
+        corrMatrix = buildCorrelationMatrix(ok);
+        buildPortfolioPlan();
+
         const nowStr = new Date().toLocaleTimeString("ms-MY", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-        document.getElementById("last-updated").textContent = `Kemas kini: ${nowStr}`;
-        renderTop3();
-        renderScannerList();
+        if (dataVerification.verified) {
+          badge.innerHTML = `<span class="verify-ok">✅ Data Binance Futures Disahkan</span> (${ep.name})`;
+        } else {
+          badge.innerHTML = `<span class="verify-bad">⛔ Data Tidak Disahkan:</span> ${dataVerification.reason}`;
+        }
+        meta.textContent = `Drift ${driftMs}ms • Kemas kini ${nowStr}`;
+        renderAllViews();
       } catch (err) {
-        statusEl.textContent = "Sambungan gagal";
-        errBox.innerHTML = `<div class="err-box"><strong>Gagal hubungi Binance:</strong> ${err.message}<br>Semak internet atau tetapkan Private DNS Android ke <code>1dot1dot1dot1.cloudflare-dns.com</code>.</div>`;
-        document.getElementById("top3-container").innerHTML = "";
+        dataVerification = { verified: false, source: "NONE", driftMs: 0, staleMinutes: 0, reason: err.message };
+        badge.innerHTML = `<span class="verify-bad">⛔ Gagal Sahkan Binance Futures</span>`;
+        meta.textContent = "Signal dikunci";
+        errBox.innerHTML = `
+          <div class="summary-banner banner-err">
+            <strong>Sambungan Binance Futures Gagal:</strong> ${err.message}<br>
+            Semua signal dikunci demi keselamatan. Jika telco Malaysia menyekat DNS Binance, tukar <strong>Private DNS Android</strong> kepada <code>1dot1dot1dot1.cloudflare-dns.com</code> dan tekan <strong>🔄 Imbas</strong> semula.
+          </div>`;
+        document.getElementById("ready-container").innerHTML = "";
+        document.getElementById("watch-container").innerHTML = "";
         document.getElementById("market-banner").innerHTML = "";
       } finally {
         btn.disabled = false;
@@ -813,109 +1141,45 @@
       }
     }
 
-    function gateBadge(ok, label) {
-      return `<div class="gate-item ${ok ? "gate-pass" : "gate-fail"}"><span>${ok ? "✅" : "❌"}</span><span>${label}</span></div>`;
+    // --- RENDERING ---
+    function updateBudgetBar() {
+      const { equity, totalRiskCap } = getPrefs();
+      const capUsdt = equity * totalRiskCap;
+      const used = portfolioPlan.usedRiskUsdt || 0;
+      const newR = portfolioPlan.newRiskUsdt || 0;
+      const totR = used + newR;
+      const totPct = (totR / equity) * 100;
+      const capPct = totalRiskCap * 100;
+      const activePctW = Math.min(100, (used / Math.max(capUsdt, 1e-9)) * 100);
+      const newPctW = Math.min(100 - activePctW, (newR / Math.max(capUsdt, 1e-9)) * 100);
+
+      document.getElementById("budget-text").innerHTML =
+        `Bajet Portfolio: <strong>$${totR.toFixed(2)} / $${capUsdt.toFixed(2)} (${totPct.toFixed(2)}% / ${capPct.toFixed(2)}% Maks)</strong>`;
+      document.getElementById("slots-text").textContent =
+        `Aktif: ${portfolioPlan.activeCount}/3 • Signal Baharu: ${portfolioPlan.ready.length}`;
+      document.getElementById("meter-active").style.width = `${activePctW.toFixed(1)}%`;
+      document.getElementById("meter-new").style.width = `${newPctW.toFixed(1)}%`;
     }
 
-    function buildCardHTML(item, rankLabel = "") {
-      const s = computeSizing(item);
-      const isSetup = item.signal === "LONG_SETUP" || item.signal === "SHORT_SETUP";
-      const isActionable = isSetup && s.eligible;
-      const isLong = item.signal === "LONG_SETUP";
-      const isShort = item.signal === "SHORT_SETUP";
+    function gateChip(status, label) {
+      const cls = status === "PASS" ? "gate-pass" : (status === "WARN" ? "gate-warn" : "gate-fail");
+      const ico = status === "PASS" ? "✅" : (status === "WARN" ? "⚠️" : "❌");
+      return `<div class="gate-item ${cls}"><span>${ico}</span><span>${label}</span></div>`;
+    }
 
-      const cardCls = isActionable ? (isLong ? "long-card" : "short-card") : (isSetup ? "blocked-card" : "wait-card");
-      const pillCls = isActionable ? (isLong ? "pill-long" : "pill-short") : (isSetup ? "pill-red" : "pill-wait");
-      const pillTxt = isActionable
-        ? (isLong ? "SAH ENTRY LONG ✓" : "SAH ENTRY SHORT ✓")
-        : (isSetup ? "TAK LEPAS MIN BINANCE" : "WAIT • JANGAN ENTRY");
-
+    function buildReadyCardHTML(item, idx) {
+      const a = item.allocation;
+      const isLong = item.bias === "LONG";
+      const coinShort = item.symbol.replace("USDT", "");
       const chgColor = item.change24h >= 0 ? "var(--green)" : "var(--red)";
       const fundStr = item.fundingRate !== null ? `${(item.fundingRate * 100).toFixed(4)}%` : "N/A";
-      const coinShort = item.symbol.replace("USDT", "");
-
-      const gatesHTML = `
-        <div class="gate-grid">
-          ${gateBadge(item.gates.trend1dOk, `1D Trend (${item.trend1d})`)}
-          ${gateBadge(item.gates.struct4hOk, "4H Struktur & Pullback")}
-          ${gateBadge(item.gates.confirm1hOk, "1H Pengesahan Candle")}
-          ${gateBadge(item.gates.roomToSrOk, `Ruang S/R (${item.rrToSr.toFixed(1)}R)`)}
-          ${gateBadge(item.gates.momentumOk, "RSI / Vol / Funding")}
-          ${gateBadge(s.eligible, `Min Binance ($${s.minNotional})`)}
-        </div>
-      `;
-
-      let bodySection = "";
-      if (!isSetup) {
-        bodySection = `
-          <div class="wait-lock-box">
-            <strong>🔒 PELAN ORDER DIKUNCI (JANGAN ENTRY SEKARANG)</strong><br>
-            ${item.failReasons.map(r => `• ${r}`).join("<br>")}
-            ${item.triggerHint ? `<br><br><strong>Syarat Pantauan:</strong> ${item.triggerHint}.` : ""}
-          </div>
-        `;
-      } else if (!s.eligible) {
-        bodySection = `
-          <div class="min-warning">
-            <strong>⛔ ORDER DISEKAT — TAK LEPAS MINIMUM BINANCE (${item.symbol})</strong><br>
-            • Risiko anda (${(getPrefs().risk * 100).toFixed(2)}% = $${(getPrefs().equity * getPrefs().risk).toFixed(2)}) hasilkan saiz <strong>$${s.notional.toFixed(2)}</strong>.<br>
-            • Binance wajib minimum <strong>$${s.minNotional}</strong> (min <strong>${fmtQty(s.effectiveMinQty, item.symbol)} ${coinShort}</strong> ≈ $${s.minReqNotional.toFixed(2)}).<br>
-            • Jika dipaksa, risiko SL sebenar melonjak ke <strong>$${s.minReqRiskUsdt.toFixed(2)} (${s.minReqRiskPct.toFixed(2)}% modal)</strong>!<br>
-            • <em>Penyelesaian:</em> Pilih altcoin ($5 min) dalam senarai atau modal ≥ $${Math.ceil(s.minEquityForCurrentRisk)}.
-          </div>
-        `;
-      } else {
-        bodySection = `
-          <div class="levels-grid">
-            <div class="lvl-box">
-              <div class="lbl">Limit Entry (${item.bias})</div>
-              <div class="val">${fmtPrice(item.entryRef, item.symbol)}</div>
-              <div class="sub">1D+4H+1H Selari</div>
-            </div>
-            <div class="lvl-box">
-              <div class="lbl">Stop Loss (Mark Price)</div>
-              <div class="val val-red">${fmtPrice(item.slRef, item.symbol)}</div>
-              <div class="sub">-${s.slPct.toFixed(2)}% (Rugi -$${(s.actualLoss + s.estFee).toFixed(2)} inc. fee)</div>
-            </div>
-            <div class="lvl-box">
-              <div class="lbl">TP 1 (1.5R • Ambil 50%)</div>
-              <div class="val val-green">${fmtPrice(item.tp1Ref, item.symbol)}</div>
-              <div class="sub">Anggaran bersih +$${s.tp1Profit.toFixed(2)}</div>
-            </div>
-            <div class="lvl-box">
-              <div class="lbl">TP 2 (2.2R • Penuh)</div>
-              <div class="val val-green">${fmtPrice(item.tp2Ref, item.symbol)}</div>
-              <div class="sub">Anggaran bersih +$${s.tp2Profit.toFixed(2)}</div>
-            </div>
-          </div>
-
-          <div class="sizing-strip">
-            <div>
-              <div class="lbl">QTY SAH BINANCE</div>
-              <div class="val">${fmtQty(s.qty, item.symbol)} ${coinShort}</div>
-            </div>
-            <div>
-              <div class="lbl">NOTIONAL (MIN $${s.minNotional})</div>
-              <div class="val" style="color:var(--green);">$${s.notional.toFixed(2)} ✓</div>
-            </div>
-            <div>
-              <div class="lbl">MARGIN (${s.lev}× ISO)</div>
-              <div class="val">$${s.margin.toFixed(2)}</div>
-            </div>
-          </div>
-
-          <div class="card-actions">
-            <button class="btn btn-sec" onclick="copyPlan('${item.symbol}')">📋 Salin Order Binance</button>
-            <button class="btn" onclick="saveToPaper('${item.symbol}')">📝 Uji di Paper Lab</button>
-          </div>
-        `;
-      }
+      const corrStatus = item.corrHaircut < 1.0 ? "WARN" : "PASS";
 
       return `
-        <div class="card ${cardCls}">
+        <div class="card ${isLong ? "long-card" : "short-card"}">
           <div class="card-top">
             <div>
-              ${rankLabel ? `<div class="rank-tag">${rankLabel}</div>` : ""}
+              <div class="rank-tag">POSISI LAYAK #${idx + 1} • ${item.cluster}</div>
               <div class="coin-name">${coinShort}<span style="color:var(--muted);font-size:13px;">/USDT</span></div>
               <div class="coin-price">
                 Mark: $${fmtPrice(item.markPrice, item.symbol)}
@@ -923,43 +1187,158 @@
               </div>
             </div>
             <div style="text-align:right;">
-              <span class="pill ${pillCls}">${pillTxt}</span>
-              <div style="font-size:11px;color:var(--muted);margin-top:5px;">Penapis: <strong style="color:#fff;">${item.score}/100</strong></div>
+              <span class="pill ${isLong ? "pill-long" : "pill-short"}">LAYAK ${item.bias} ✓</span>
+              <div style="font-size:11px;color:var(--muted);margin-top:5px;">R:R <strong>1 : ${item.rrTp2.toFixed(1)}</strong></div>
             </div>
           </div>
 
-          ${gatesHTML}
+          <div class="gate-grid">
+            ${gateChip("PASS", `1D Trend (${item.trend1d})`)}
+            ${gateChip("PASS", "4H Setup & Pullback")}
+            ${gateChip("PASS", `Ruang S/R (${item.rrToSr.toFixed(1)}R)`)}
+            ${gateChip("PASS", "RSI / Vol / Funding")}
+            ${gateChip(corrStatus, `Korelasi BTC ${item.corrBtc.toFixed(2)}`)}
+            ${gateChip("PASS", `Min Binance ($${a.minNotional})`)}
+          </div>
+
+          <div class="levels-grid">
+            <div class="lvl-box">
+              <div class="lbl">Limit Entry (${item.bias})</div>
+              <div class="val">${fmtPrice(item.entryRef, item.symbol)}</div>
+              <div class="sub">Risiko slot: ${a.actualRiskPct.toFixed(2)}% ($${a.actualRiskUsdt.toFixed(2)})</div>
+            </div>
+            <div class="lvl-box">
+              <div class="lbl">Stop Loss (Mark Price)</div>
+              <div class="val val-red">${fmtPrice(item.slRef, item.symbol)}</div>
+              <div class="sub">-${a.slPct.toFixed(2)}% (Rugi -$${(a.actualRiskUsdt + a.estFee).toFixed(2)} inc. fee)</div>
+            </div>
+            <div class="lvl-box">
+              <div class="lbl">TP 1 (1.5R • Ambil 50%)</div>
+              <div class="val val-green">${fmtPrice(item.tp1Ref, item.symbol)}</div>
+              <div class="sub">Anggaran bersih +$${a.tp1Profit.toFixed(2)}</div>
+            </div>
+            <div class="lvl-box">
+              <div class="lbl">TP 2 (2.2R • Penuh)</div>
+              <div class="val val-green">${fmtPrice(item.tp2Ref, item.symbol)}</div>
+              <div class="sub">Anggaran bersih +$${a.tp2Profit.toFixed(2)}</div>
+            </div>
+          </div>
+
+          <div class="sizing-strip">
+            <div>
+              <div class="lbl">QTY BINANCE</div>
+              <div class="val">${fmtQty(a.qty, item.symbol)} ${coinShort}</div>
+            </div>
+            <div>
+              <div class="lbl">NOTIONAL (MIN $${a.minNotional})</div>
+              <div class="val" style="color:var(--green);">$${a.notional.toFixed(2)} ✓</div>
+            </div>
+            <div>
+              <div class="lbl">MARGIN (${a.lev}× ISO)</div>
+              <div class="val">$${a.margin.toFixed(2)}</div>
+            </div>
+          </div>
 
           <div class="ind-row">
+            <span class="ind-chip">r(BTC): ${item.corrBtc.toFixed(2)}</span>
+            <span class="ind-chip">r(ETH): ${item.corrEth.toFixed(2)}</span>
             <span class="ind-chip">EMA20 4H: ${fmtPrice(item.ema20_4h, item.symbol)}</span>
-            <span class="ind-chip">EMA20 1H: ${fmtPrice(item.ema20_1h, item.symbol)}</span>
-            <span class="ind-chip">RSI: ${item.rsi4h.toFixed(1)}</span>
-            <span class="ind-chip">Vol: ${item.volRatio.toFixed(2)}×</span>
+            <span class="ind-chip">RSI 4H: ${item.rsi4h.toFixed(1)}</span>
             <span class="ind-chip">Fund: ${fundStr}</span>
           </div>
 
-          ${bodySection}
+          <div class="reason-box">
+            <strong>Sebab Pemilihan:</strong><br>
+            ${item.positives.map(p => `• ${p}`).join("<br>")}<br>
+            • <strong>Korelasi:</strong> ${item.corrNote}.
+          </div>
+
+          <div class="card-actions">
+            <button class="btn btn-sec" onclick="copyPlan('${item.symbol}')">📋 Salin Pelan</button>
+            <button class="btn" onclick="recordActivePosition('${item.symbol}')">📝 Rekod Posisi Aktif</button>
+          </div>
         </div>
       `;
     }
 
-    function renderTop3() {
-      const readyList = scanResults.filter(x => x.signal !== "WAIT" && computeSizing(x).eligible);
-      const blockedSetupList = scanResults.filter(x => x.signal !== "WAIT" && !computeSizing(x).eligible);
-      const eligiblePool = scanResults.filter(x => computeSizing(x).eligible);
-      const banner = document.getElementById("market-banner");
+    function buildWatchCardHTML(item, idx) {
+      const coinShort = item.symbol.replace("USDT", "");
+      const chgColor = item.change24h >= 0 ? "var(--green)" : "var(--red)";
+      const isCorrBlock = item.blockReason && item.blockReason.includes("KORELASI");
+      const badgeCls = isCorrBlock ? "pill-purple" : "pill-wait";
+      const badgeTxt = isCorrBlock ? "DISEKAT KORELASI" : (item.techQualified ? "TAK LEPAS BAJET/MIN" : `CALON PANTAUAN (${item.trend1d})`);
 
-      if (readyList.length > 0) {
-        banner.innerHTML = `<div class="summary-banner banner-ok"><strong>✅ ${readyList.length}/10 COIN LULUS SEMUA 6 PENAPIS (1D+4H+1H) & LEPAS MIN BINANCE.</strong> Semak carta Binance & pasang SL segera. (Tiada jaminan menang — disiplin risiko wajib.)</div>`;
-      } else if (blockedSetupList.length > 0) {
-        banner.innerHTML = `<div class="summary-banner banner-warn"><strong>⚠️ ${blockedSetupList.length} SETUP WUJUD TETAPI TAK LEPAS MINIMUM BINANCE</strong> untuk modal/risiko sekarang. Top 3 di bawah ditapis kepada coin yang lepas had minimum Binance sahaja.</div>`;
+      const reasonLines = [];
+      if (item.blockReason) reasonLines.push(item.blockReason);
+      for (const r of item.failReasons) reasonLines.push(r);
+
+      return `
+        <div class="card ${isCorrBlock ? "corr-card" : "watch-card"}">
+          <div class="card-top">
+            <div>
+              <div class="rank-tag">CALON PANTAUAN #${idx + 1} • ${item.cluster}</div>
+              <div class="coin-name">${coinShort}<span style="color:var(--muted);font-size:13px;">/USDT</span></div>
+              <div class="coin-price">
+                Mark: $${fmtPrice(item.markPrice, item.symbol)}
+                <span style="color:${chgColor};margin-left:6px;">${item.change24h >= 0 ? "+" : ""}${item.change24h.toFixed(2)}%</span>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <span class="pill ${badgeCls}">${badgeTxt}</span>
+              <div style="font-size:11px;color:var(--muted);margin-top:5px;">Penapis: <strong style="color:#fff;">${item.score}/100</strong></div>
+            </div>
+          </div>
+
+          <div class="gate-grid">
+            ${gateChip(item.gates.trend1dOk ? "PASS" : "FAIL", `1D Trend (${item.trend1d})`)}
+            ${gateChip(item.gates.setup4hOk ? "PASS" : "FAIL", "4H Struktur & Pullback")}
+            ${gateChip(item.gates.candleBodyOk ? "PASS" : "FAIL", "Candle Tutup 4H")}
+            ${gateChip(item.gates.roomToSrOk ? "PASS" : "FAIL", `Ruang S/R (${item.rrToSr.toFixed(1)}R)`)}
+            ${gateChip(item.gates.momentumOk ? "PASS" : "FAIL", "RSI / Vol / Funding")}
+            ${gateChip(isCorrBlock ? "FAIL" : "WARN", `r(BTC) ${item.corrBtc.toFixed(2)} • r(ETH) ${item.corrEth.toFixed(2)}`)}
+          </div>
+
+          <div class="${isCorrBlock ? "corr-block-box" : "watch-lock-box"}">
+            <strong>🔒 BELUM LAYAK DIBUKA (PANTAUAN SAHAJA)</strong><br>
+            ${reasonLines.map(r => `• ${r}`).join("<br>")}
+            ${item.triggerHint ? `<br><br><strong>Syarat Tunggu:</strong> ${item.triggerHint}.` : ""}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTop3Tab() {
+      const { ready, watchlist, activeCount } = portfolioPlan;
+      const banner = document.getElementById("market-banner");
+      const readyBox = document.getElementById("ready-container");
+      const watchBox = document.getElementById("watch-container");
+
+      document.getElementById("ready-count-pill").textContent = `${ready.length} / ${Math.max(0, 3 - activeCount)} Slot`;
+      document.getElementById("watch-count-pill").textContent = `${watchlist.length} / 3`;
+
+      if (!dataVerification.verified) {
+        banner.innerHTML = `<div class="summary-banner banner-err"><strong>⛔ DATA BINANCE FUTURES TIDAK DISAHKAN.</strong> Semua signal dikunci sehingga sambungan data terkini disahkan.</div>`;
+      } else if (ready.length > 0) {
+        banner.innerHTML = `<div class="summary-banner banner-ok"><strong>✅ ${ready.length} POSISI BENAR-BENAR LAYAK DIBUKA</strong> (daripada 10 coin). Jumlah risiko portfolio terkawal ≤ ${(getPrefs().totalRiskCap*100).toFixed(2)}% & lulus semakan korelasi.</div>`;
       } else {
-        banner.innerHTML = `<div class="summary-banner banner-wait"><strong>⏸️ 0/10 COIN SAH ENTRY SEKARANG — KEKAL TUNAI (WAIT).</strong> Jangan paksa masuk bila pasaran belum sah. Di bawah ialah Top 3 coin (yang lepas min Binance) paling hampir untuk dipantau.</div>`;
+        banner.innerHTML = `<div class="summary-banner banner-wait"><strong>⏸️ 0 POSISI LAYAK DIBUKA SEKARANG — KEKAL TUNAI (WAIT).</strong> Sistem tidak memaksa 3 signal apabila pasaran belum berkualiti atau bajet risiko/korelasi tersekat.</div>`;
       }
 
-      const top3 = (eligiblePool.length >= 3 ? eligiblePool : scanResults).slice(0, 3);
-      const labels = ["🥇 PILIHAN #1 (LEPAS MIN BINANCE)", "🥈 PILIHAN #2 (LEPAS MIN BINANCE)", "🥉 PILIHAN #3 (LEPAS MIN BINANCE)"];
-      document.getElementById("top3-container").innerHTML = top3.map((it, i) => buildCardHTML(it, labels[i])).join("");
+      if (ready.length === 0) {
+        readyBox.innerHTML = `
+          <div class="card" style="text-align:center;color:var(--muted);padding:18px;font-size:12.5px;line-height:1.5;">
+            Tiada coin yang lulus kesemua syarat teknikal 1D+4H, korelasi, dan minimum order Binance pada imbasan ini.<br>
+            <strong>Disiplin terbaik sekarang ialah tunggu candle 4H seterusnya.</strong>
+          </div>`;
+      } else {
+        readyBox.innerHTML = ready.map((item, i) => buildReadyCardHTML(item, i)).join("");
+      }
+
+      if (watchlist.length === 0) {
+        watchBox.innerHTML = `<div class="card" style="text-align:center;color:var(--muted);font-size:12px;">Tiada calon pantauan tambahan.</div>`;
+      } else {
+        watchBox.innerHTML = watchlist.map((item, i) => buildWatchCardHTML(item, i)).join("");
+      }
     }
 
     function setFilter(f, btn) {
@@ -971,144 +1350,195 @@
 
     function renderScannerList() {
       const box = document.getElementById("scanner-list");
-      const filtered = scanResults.filter(item => {
-        const s = computeSizing(item);
-        if (currentFilter === "READY") return item.signal !== "WAIT" && s.eligible;
-        if (currentFilter === "ELIGIBLE") return s.eligible;
+      const sorted = [...rawEvaluations].sort((a, b) => {
+        const ra = a.statusCategory === "READY" ? 2 : (a.techQualified ? 1 : 0);
+        const rb = b.statusCategory === "READY" ? 2 : (b.techQualified ? 1 : 0);
+        if (rb !== ra) return rb - ra;
+        return b.score - a.score;
+      });
+
+      const filtered = sorted.filter(item => {
+        if (currentFilter === "READY") return item.statusCategory === "READY";
+        if (currentFilter === "CANDIDATE") return item.statusCategory !== "READY" && item.score >= 40;
         if (currentFilter === "BULLISH") return item.trend1d === "BULLISH";
         if (currentFilter === "BEARISH") return item.trend1d === "BEARISH";
         return true;
       });
+
       if (!filtered.length) {
-        box.innerHTML = `<div class="card" style="text-align:center;color:var(--muted);">Tiada coin memenuhi penapis ini sekarang.</div>`;
-        return;
-      }
-      box.innerHTML = filtered.map(item => {
-        const s = computeSizing(item);
-        const isSetup = item.signal !== "WAIT";
-        const pillCls = (isSetup && s.eligible)
-          ? (item.signal === "LONG_SETUP" ? "pill-long" : "pill-short")
-          : (isSetup ? "pill-red" : "pill-wait");
-        const pillTxt = (isSetup && s.eligible)
-          ? (item.signal === "LONG_SETUP" ? "SAH LONG ✓" : "SAH SHORT ✓")
-          : (isSetup ? "MIN TAK LEPAS" : `WAIT (${item.trend1d})`);
-        return `
-          <div class="scan-row" onclick="openCoinModal('${item.symbol}')">
-            <div>
-              <div style="font-weight:800;font-size:15px;">${item.symbol} <span style="font-weight:500;color:var(--muted);font-size:12px;">$${fmtPrice(item.markPrice, item.symbol)}</span></div>
-              <div style="font-size:11px;color:var(--muted);margin-top:2px;">
-                Min Binance: $${s.minNotional} • RSI: ${item.rsi4h.toFixed(1)} • ${s.eligible ? "Saiz Lepas ✓" : "Modal/Risiko Tak Cukup ✗"}
+        box.innerHTML = `<div class="card" style="text-align:center;color:var(--muted);">Tiada coin memenuhi penapis ini.</div>`;
+      } else {
+        box.innerHTML = filtered.map(item => {
+          const isReady = item.statusCategory === "READY";
+          const isCorr = item.blockReason && item.blockReason.includes("KORELASI");
+          const pillCls = isReady ? (item.bias === "LONG" ? "pill-long" : "pill-short") : (isCorr ? "pill-purple" : "pill-wait");
+          const pillTxt = isReady ? `LAYAK ${item.bias} ✓` : (isCorr ? "SEKATAN KORELASI" : `WAIT (${item.trend1d})`);
+          return `
+            <div class="scan-row" onclick="openCoinModal('${item.symbol}')">
+              <div>
+                <div style="font-weight:800;font-size:15px;">${item.symbol} <span style="font-weight:500;color:var(--muted);font-size:12px;">$${fmtPrice(item.markPrice, item.symbol)}</span></div>
+                <div style="font-size:11px;color:var(--muted);margin-top:2px;">
+                  r(BTC): ${item.corrBtc.toFixed(2)} • r(ETH): ${item.corrEth.toFixed(2)} • RSI 4H: ${item.rsi4h.toFixed(1)}
+                </div>
               </div>
-            </div>
-            <div style="text-align:right;">
-              <span class="pill ${pillCls}">${pillTxt}</span>
-              <div style="font-size:11px;color:var(--muted);margin-top:4px;">Penapis ${item.score}/100</div>
-            </div>
-          </div>`;
+              <div style="text-align:right;">
+                <span class="pill ${pillCls}">${pillTxt}</span>
+                <div style="font-size:11px;color:var(--muted);margin-top:4px;">Skor ${item.score}/100</div>
+              </div>
+            </div>`;
+        }).join("");
+      }
+
+      // Render Live Correlation Summary Table
+      const cBox = document.getElementById("corr-matrix-box");
+      if (!rawEvaluations.length) { cBox.innerHTML = "-"; return; }
+      const rows = rawEvaluations.map(it => {
+        const btcCol = it.corrBtc >= 0.80 ? "color:var(--red);font-weight:700;" : (it.corrBtc >= 0.65 ? "color:var(--amber);" : "color:var(--green);");
+        const ethCol = it.corrEth >= 0.80 ? "color:var(--red);font-weight:700;" : (it.corrEth >= 0.65 ? "color:var(--amber);" : "color:var(--green);");
+        return `<tr>
+          <td><strong>${it.symbol.replace("USDT","")}</strong> <span style="color:var(--muted);font-size:10px;">${it.cluster}</span></td>
+          <td style="${btcCol}">${it.corrBtc.toFixed(2)}</td>
+          <td style="${ethCol}">${it.corrEth.toFixed(2)}</td>
+          <td>${it.trend1d}</td>
+        </tr>`;
       }).join("");
+      cBox.innerHTML = `<table class="corr-table"><thead><tr><th>Coin</th><th>vs BTC</th><th>vs ETH</th><th>1D</th></tr></thead><tbody>${rows}</tbody></table>`;
     }
 
     function openCoinModal(symbol) {
-      const item = scanResults.find(x => x.symbol === symbol);
+      const item = rawEvaluations.find(x => x.symbol === symbol);
       if (!item) return;
-      document.getElementById("modal-body").innerHTML = buildCardHTML(item, "PERINCIAN PENUH COIN");
+      const html = item.statusCategory === "READY"
+        ? buildReadyCardHTML(item, 0)
+        : buildWatchCardHTML(item, 0);
+      document.getElementById("modal-body").innerHTML = html;
       document.getElementById("detail-modal").classList.add("open");
     }
-
     function closeModal() { document.getElementById("detail-modal").classList.remove("open"); }
 
     function copyPlan(symbol) {
-      const item = scanResults.find(x => x.symbol === symbol);
-      if (!item) return;
-      const s = computeSizing(item);
+      const item = portfolioPlan.ready.find(x => x.symbol === symbol);
+      if (!item || !item.allocation) return;
+      const a = item.allocation;
       const txt = [
-        `THE VETERAN v2.1 — ${item.symbol} (${item.signal})`,
-        `Margin: ISOLATED ${s.lev}x (One-Way)`,
+        `THE VETERAN v3.0 — ${item.symbol} (${item.bias})`,
+        `Margin: ISOLATED ${a.lev}x (One-Way) | R:R 1:${item.rrTp2.toFixed(1)}`,
         `Limit Entry: ${fmtPrice(item.entryRef, symbol)}`,
-        `Qty (Sah Binance): ${fmtQty(s.qty, symbol)} ${symbol.replace("USDT","")} (Notional $${s.notional.toFixed(2)} >= $${s.minNotional})`,
-        `SL (Mark): ${fmtPrice(item.slRef, symbol)} (-$${(s.actualLoss + s.estFee).toFixed(2)})`,
-        `TP1 (1.5R): ${fmtPrice(item.tp1Ref, symbol)} | TP2 (2.2R): ${fmtPrice(item.tp2Ref, symbol)}`
+        `Qty (Sah Binance): ${fmtQty(a.qty, symbol)} ${symbol.replace("USDT","")} (Notional $${a.notional.toFixed(2)})`,
+        `SL (Mark): ${fmtPrice(item.slRef, symbol)} (Risiko ${a.actualRiskPct.toFixed(2)}% = $${a.actualRiskUsdt.toFixed(2)})`,
+        `TP1 (1.5R): ${fmtPrice(item.tp1Ref, symbol)} | TP2 (2.2R): ${fmtPrice(item.tp2Ref, symbol)}`,
+        `Korelasi: r(BTC)=${item.corrBtc.toFixed(2)}, r(ETH)=${item.corrEth.toFixed(2)}`
       ].join("\n");
-      if (navigator.clipboard) navigator.clipboard.writeText(txt).then(() => showToast(`Order ${symbol} disalin!`));
+      if (navigator.clipboard) navigator.clipboard.writeText(txt).then(() => showToast(`Pelan ${symbol} disalin!`));
       else prompt("Salin pelan:", txt);
     }
 
-    function getPaperState() { return JSON.parse(localStorage.getItem("vet_paper") || '{"balance":1000,"trades":[]}'); }
-    function setPaperState(st) { localStorage.setItem("vet_paper", JSON.stringify(st)); }
-
-    function saveToPaper(symbol) {
-      const item = scanResults.find(x => x.symbol === symbol);
-      if (!item || item.signal === "WAIT") return;
-      const s = computeSizing(item);
-      if (!s.eligible) return;
+    // --- ACTIVE POSITION / PAPER LAB ACTIONS ---
+    function recordActivePosition(symbol) {
+      const item = portfolioPlan.ready.find(x => x.symbol === symbol);
+      if (!item || !item.allocation) return;
       const st = getPaperState();
+      const openCount = st.trades.filter(t => t.status === "OPEN").length;
+      if (openCount >= 3) {
+        showToast("Had maksimum 3 posisi aktif telah dicapai!");
+        return;
+      }
       st.trades.unshift({
         id: Date.now().toString(),
         symbol: item.symbol, side: item.bias,
         entry: item.entryRef, sl: item.slRef, tp: item.tp2Ref,
-        qty: s.qty, status: "OPEN", pnl: 0,
+        qty: item.allocation.qty,
+        riskUsdt: item.allocation.actualRiskUsdt,
+        status: "OPEN", pnl: 0,
         openedAt: new Date().toLocaleString("ms-MY")
       });
       setPaperState(st);
-      renderPaper();
-      showToast(`${symbol} direkod di Paper Lab!`);
+      buildPortfolioPlan();
+      renderAllViews();
+      showToast(`${symbol} direkod sebagai Posisi Aktif!`);
     }
 
     function closePaperTrade(id, presetPrice = null) {
       const st = getPaperState();
       const t = st.trades.find(x => x.id === id);
       if (!t || t.status !== "OPEN") return;
-      const liveItem = scanResults.find(x => x.symbol === t.symbol);
+      const liveItem = rawEvaluations.find(x => x.symbol === t.symbol);
       const defPrice = presetPrice || (liveItem ? liveItem.markPrice : t.entry);
       const input = presetPrice ? presetPrice : parseFloat(prompt(`Harga tutup ${t.symbol}:`, fmtPrice(defPrice, t.symbol)));
       if (!isFinite(input) || input <= 0) return;
+
       const gross = t.side === "LONG" ? (input - t.entry) * t.qty : (t.entry - input) * t.qty;
       const fee = (t.entry + input) * t.qty * 0.0005;
       t.exit = input; t.pnl = gross - fee; t.status = "CLOSED";
       st.balance += t.pnl;
-      setPaperState(st); renderPaper();
-      showToast(`Paper ditutup (${t.pnl >= 0 ? "+" : ""}$${t.pnl.toFixed(2)})`);
+      setPaperState(st);
+      if (rawEvaluations.length) buildPortfolioPlan();
+      renderAllViews();
+      showToast(`Posisi ditutup (${t.pnl >= 0 ? "+" : ""}$${t.pnl.toFixed(2)})`);
     }
 
     function deletePaperTrade(id) {
       const st = getPaperState();
       st.trades = st.trades.filter(x => x.id !== id);
-      setPaperState(st); renderPaper();
+      setPaperState(st);
+      if (rawEvaluations.length) buildPortfolioPlan();
+      renderAllViews();
     }
 
     function renderPaper() {
       const st = getPaperState();
-      document.getElementById("paper-bal").textContent = `$${st.balance.toFixed(2)}`;
+      const open = st.trades.filter(t => t.status === "OPEN");
       const closed = st.trades.filter(t => t.status === "CLOSED");
       const wins = closed.filter(t => t.pnl > 0).length;
       const wr = closed.length ? Math.round((wins / closed.length) * 100) : 0;
-      document.getElementById("paper-wr").textContent = `${wr}% (${wins}/${closed.length})`;
+
+      document.getElementById("paper-bal").textContent = `$${st.balance.toFixed(2)}`;
+      document.getElementById("paper-wr").textContent = `${open.length}/3 Aktif • ${wr}% WR (${wins}/${closed.length})`;
+
       const box = document.getElementById("paper-trades-list");
       if (!st.trades.length) {
-        box.innerHTML = `<div class="card" style="text-align:center;color:var(--muted);">Belum ada rekod Paper Trade.</div>`;
+        box.innerHTML = `<div class="card" style="text-align:center;color:var(--muted);font-size:12.5px;">Belum ada rekod posisi aktif atau Paper Trade.</div>`;
         return;
       }
-      box.innerHTML = st.trades.map(t => `
-        <div class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <strong>${t.symbol} • ${t.side}</strong>
-            <span class="pill ${t.status === "OPEN" ? "pill-blue" : (t.pnl >= 0 ? "pill-long" : "pill-short")}">
-              ${t.status === "OPEN" ? "AKTIF" : (t.pnl >= 0 ? `+$${t.pnl.toFixed(2)}` : `-$${Math.abs(t.pnl).toFixed(2)}`)}
-            </span>
-          </div>
-          <div style="font-size:12px;color:var(--muted);font-family:ui-monospace,monospace;">
-            Entry: ${fmtPrice(t.entry, t.symbol)} | SL: ${fmtPrice(t.sl, t.symbol)} | TP: ${fmtPrice(t.tp, t.symbol)} | Qty: ${fmtQty(t.qty, t.symbol)}
-          </div>
-          <div style="font-size:11px;color:var(--muted);margin:4px 0 8px;">${t.openedAt}</div>
-          ${t.status === "OPEN" ? `
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
-              <button class="btn" style="background:var(--green);color:#052e16;" onclick="closePaperTrade('${t.id}', ${t.tp})">Kena TP</button>
-              <button class="btn btn-danger" onclick="closePaperTrade('${t.id}', ${t.sl})">Kena SL</button>
-              <button class="btn btn-sec" onclick="closePaperTrade('${t.id}')">Harga Lain</button>
+
+      box.innerHTML = st.trades.map(t => {
+        const live = rawEvaluations.find(x => x.symbol === t.symbol);
+        const liveUnr = (t.status === "OPEN" && live)
+          ? (t.side === "LONG" ? (live.markPrice - t.entry) * t.qty : (t.entry - live.markPrice) * t.qty)
+          : null;
+        const badgeTxt = t.status === "OPEN"
+          ? (liveUnr !== null ? `AKTIF (${liveUnr >= 0 ? "+" : ""}$${liveUnr.toFixed(2)})` : "AKTIF")
+          : (t.pnl >= 0 ? `+$${t.pnl.toFixed(2)}` : `-$${Math.abs(t.pnl).toFixed(2)}`);
+        const badgeCls = t.status === "OPEN" ? "pill-blue" : (t.pnl >= 0 ? "pill-long" : "pill-short");
+        const riskUsd = Math.abs(t.entry - t.sl) * t.qty;
+
+        return `
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <strong>${t.symbol} • ${t.side}</strong>
+              <span class="pill ${badgeCls}">${badgeTxt}</span>
             </div>
-          ` : `<button class="btn btn-sec" style="width:100%;" onclick="deletePaperTrade('${t.id}')">Padam</button>`}
-        </div>
-      `).join("");
+            <div style="font-size:12px;color:var(--muted);font-family:ui-monospace,monospace;">
+              Entry: ${fmtPrice(t.entry, t.symbol)} | SL: ${fmtPrice(t.sl, t.symbol)} | TP: ${fmtPrice(t.tp, t.symbol)}<br>
+              Qty: ${fmtQty(t.qty, t.symbol)} | Risiko SL: $${riskUsd.toFixed(2)}
+            </div>
+            <div style="font-size:11px;color:var(--muted);margin:4px 0 8px;">${t.openedAt}</div>
+            ${t.status === "OPEN" ? `
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+                <button class="btn" style="background:var(--green);color:#052e16;" onclick="closePaperTrade('${t.id}', ${t.tp})">Kena TP</button>
+                <button class="btn btn-danger" onclick="closePaperTrade('${t.id}', ${t.sl})">Kena SL</button>
+                <button class="btn btn-sec" onclick="closePaperTrade('${t.id}')">Harga Lain</button>
+              </div>
+            ` : `<button class="btn btn-sec" style="width:100%;" onclick="deletePaperTrade('${t.id}')">Padam</button>`}
+          </div>`;
+      }).join("");
+    }
+
+    function renderAllViews() {
+      updateBudgetBar();
+      renderTop3Tab();
+      renderScannerList();
+      renderPaper();
     }
 
     function resetChecklist() {
@@ -1129,6 +1559,7 @@
     }
     loadPrefs();
     renderPaper();
+    updateBudgetBar();
     scanMarket();
   </script>
 </body>

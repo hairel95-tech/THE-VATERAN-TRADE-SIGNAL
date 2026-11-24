@@ -1,4 +1,4 @@
-const CACHE_NAME = "the-veteran-entry-v21-strict";
+const CACHE_NAME = "the-veteran-entry-v30-portfolio";
 const CORE = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", (e) => {
