@@ -6,10 +6,10 @@
   <meta name="theme-color" content="#090d16" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-    <link rel="manifest" href="./manifest.json" />
-  <link rel="icon" type="image/svg+xml" href="./icon-192.png" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/png" href="./icon-192.png" />
   <link rel="apple-touch-icon" href="./icon-192.png" />
-  <title>THE VETERAN — Top 3 Entry Scanner</title>
+  <title>THE VETERAN v2.1 — Top 3 Verified Entry</title>
   <style>
     :root {
       --bg: #090d16;
@@ -29,347 +29,200 @@
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
+      margin: 0; background: var(--bg); color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       padding-bottom: 78px;
     }
     header {
-      position: sticky;
-      top: 0;
-      z-index: 30;
-      background: rgba(9, 13, 22, 0.94);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
-      padding: 12px 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
+      position: sticky; top: 0; z-index: 30;
+      background: rgba(9, 13, 22, 0.96); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border); padding: 12px 14px;
+      display: flex; justify-content: space-between; align-items: center; gap: 8px;
     }
     .brand-title { font-weight: 800; font-size: 16px; letter-spacing: 0.4px; }
     .brand-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
     .btn-refresh {
-      background: var(--blue);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 8px 12px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
+      background: var(--blue); color: #fff; border: none; border-radius: 10px;
+      padding: 8px 12px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap;
     }
     .btn-refresh:disabled { opacity: 0.55; }
 
     .container { max-width: 720px; margin: 0 auto; padding: 12px; }
 
-    /* Compact Risk Control Bar */
     .risk-bar {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px 12px;
-      margin-bottom: 12px;
-      display: grid;
-      grid-template-columns: 1.1fr 1fr 0.85fr;
-      gap: 8px;
-      align-items: end;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;
+      display: grid; grid-template-columns: 1.05fr 1.1fr 0.85fr; gap: 8px; align-items: end;
     }
     .field label {
-      display: block;
-      font-size: 10px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      margin-bottom: 4px;
+      display: block; font-size: 10px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px;
     }
     .field input, .field select {
-      width: 100%;
-      background: var(--bg);
-      color: var(--text);
-      border: 1px solid #334155;
-      border-radius: 8px;
-      padding: 7px 8px;
-      font-size: 13px;
-      font-weight: 700;
+      width: 100%; background: var(--bg); color: var(--text);
+      border: 1px solid #334155; border-radius: 8px; padding: 7px 8px;
+      font-size: 13px; font-weight: 700;
     }
 
     .status-strip {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 10px;
-      padding: 0 2px;
-      gap: 8px;
-      flex-wrap: wrap;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 11px; color: var(--muted); margin-bottom: 10px; padding: 0 2px; gap: 8px; flex-wrap: wrap;
     }
 
-    .disclaimer-box {
-      background: rgba(59, 130, 246, 0.08);
-      border: 1px solid rgba(59, 130, 246, 0.25);
-      border-radius: 10px;
-      padding: 8px 10px;
-      font-size: 11px;
-      color: #cbd5e1;
-      margin-bottom: 12px;
-      line-height: 1.4;
-    }
+    .summary-banner { border-radius: 12px; padding: 11px 12px; margin-bottom: 12px; font-size: 12px; line-height: 1.48; }
+    .banner-wait { background: var(--amber-bg); border: 1px solid rgba(245, 158, 11, 0.35); color: #fde68a; }
+    .banner-ok { background: var(--green-bg); border: 1px solid rgba(16, 185, 129, 0.35); color: #a7f3d0; }
+    .banner-warn { background: var(--red-bg); border: 1px solid rgba(239, 68, 68, 0.4); color: #fecaca; }
 
-    /* Entry Cards */
     .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 12px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 14px; margin-bottom: 12px;
     }
     .card.long-card { border-left: 4px solid var(--green); }
     .card.short-card { border-left: 4px solid var(--red); }
     .card.wait-card { border-left: 4px solid var(--amber); }
+    .card.blocked-card { border-left: 4px solid #64748b; }
 
-    .card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 10px; }
     .rank-tag {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 800;
-      padding: 2px 7px;
-      border-radius: 6px;
-      background: var(--surface-2);
-      color: #cbd5e1;
-      margin-bottom: 4px;
+      display: inline-block; font-size: 10px; font-weight: 800;
+      padding: 2px 7px; border-radius: 6px; background: var(--surface-2); color: #cbd5e1; margin-bottom: 4px;
     }
     .coin-name { font-size: 18px; font-weight: 800; }
     .coin-price { font-size: 13px; color: var(--muted); font-family: ui-monospace, monospace; margin-top: 2px; }
 
-    .pill {
-      display: inline-block;
-      padding: 4px 9px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.3px;
-    }
+    .pill { display: inline-block; padding: 4px 9px; border-radius: 999px; font-size: 11px; font-weight: 800; }
     .pill-long { background: var(--green-bg); color: var(--green); }
     .pill-short { background: var(--red-bg); color: var(--red); }
     .pill-wait { background: var(--amber-bg); color: var(--amber); }
+    .pill-red { background: var(--red-bg); color: #fca5a5; }
     .pill-blue { background: var(--blue-bg); color: #93c5fd; }
 
-    .levels-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-      margin-bottom: 10px;
+    .gate-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; margin-bottom: 10px; }
+    .gate-item {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+      padding: 6px 8px; font-size: 11px; display: flex; align-items: center; gap: 5px;
     }
-    .lvl-box {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 8px 10px;
-    }
+    .gate-pass { border-color: rgba(16, 185, 129, 0.35); color: #d1fae5; }
+    .gate-fail { border-color: rgba(239, 68, 68, 0.30); color: #cbd5e1; opacity: 0.85; }
+
+    .levels-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 10px; }
+    .lvl-box { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; }
     .lvl-box .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; }
     .lvl-box .val { font-size: 14px; font-weight: 800; font-family: ui-monospace, monospace; margin-top: 2px; }
     .lvl-box .sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
     .val-green { color: var(--green); }
     .val-red { color: var(--red); }
-    .val-amber { color: var(--amber); }
 
     .sizing-strip {
-      background: var(--surface-2);
-      border-radius: 10px;
-      padding: 9px 10px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      margin-bottom: 10px;
-      text-align: center;
+      background: var(--surface-2); border-radius: 10px; padding: 9px 10px;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; text-align: center;
     }
     .sizing-strip .lbl { font-size: 10px; color: var(--muted); }
     .sizing-strip .val { font-size: 12px; font-weight: 800; font-family: ui-monospace, monospace; margin-top: 2px; }
 
-    .veteran-note {
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 9px 10px;
-      font-size: 12px;
-      line-height: 1.48;
-      color: #e2e8f0;
-      margin-bottom: 10px;
+    .min-warning {
+      background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.4);
+      border-radius: 10px; padding: 10px; font-size: 12px; line-height: 1.48;
+      color: #fecaca; margin-bottom: 10px;
     }
-    .veteran-note strong { color: #fff; }
+    .wait-lock-box {
+      background: rgba(245, 158, 11, 0.08); border: 1px dashed rgba(245, 158, 11, 0.4);
+      border-radius: 10px; padding: 10px; font-size: 12px; line-height: 1.5;
+      color: #fde68a; margin-bottom: 10px;
+    }
 
-    .ind-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 10px;
-    }
+    .ind-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
     .ind-chip {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 3px 7px;
-      font-size: 11px;
-      color: var(--muted);
-      font-family: ui-monospace, monospace;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+      padding: 3px 7px; font-size: 11px; color: var(--muted); font-family: ui-monospace, monospace;
     }
 
-    .card-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
+    .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .btn {
-      border: none;
-      border-radius: 9px;
-      padding: 9px 10px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      color: #fff;
-      background: #2563eb;
+      border: none; border-radius: 9px; padding: 9px 10px; font-size: 12px;
+      font-weight: 700; cursor: pointer; color: #fff; background: #2563eb;
     }
     .btn-sec { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; }
     .btn-danger { background: #dc2626; }
 
-    /* Scanner 10 Coin Table/List */
     .filter-row { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 10px; padding-bottom: 2px; }
     .chip-btn {
-      background: var(--surface);
-      color: var(--muted);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 6px 12px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
+      background: var(--surface); color: var(--muted); border: 1px solid var(--border);
+      border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap;
     }
     .chip-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
 
     .scan-row {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 11px 12px;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 11px 12px; margin-bottom: 8px; display: flex; justify-content: space-between;
+      align-items: center; gap: 8px; cursor: pointer;
     }
-    .scan-row:active { background: var(--surface-2); }
 
-    /* Paper Lab & Checklist */
     .check-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 13px;
-      line-height: 1.4;
+      display: flex; align-items: flex-start; gap: 10px; padding: 10px 0;
+      border-bottom: 1px solid var(--border); font-size: 13px; line-height: 1.4;
     }
     .check-item input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--green); }
     .check-item:last-child { border-bottom: none; }
 
-    /* Bottom Navigation */
     nav.bottom-nav {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      z-index: 40;
-      background: rgba(15, 23, 42, 0.97);
-      border-top: 1px solid var(--border);
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      padding: 6px 6px 8px;
-      gap: 4px;
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 40;
+      background: rgba(15, 23, 42, 0.97); border-top: 1px solid var(--border);
+      display: grid; grid-template-columns: repeat(4, 1fr); padding: 6px 6px 8px; gap: 4px;
     }
     .nav-btn {
-      background: transparent;
-      border: none;
-      color: var(--muted);
-      padding: 7px 4px;
-      border-radius: 10px;
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
+      background: transparent; border: none; color: var(--muted); padding: 7px 4px;
+      border-radius: 10px; font-size: 11px; font-weight: 700; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
     }
     .nav-btn.active { background: #1e293b; color: #fff; }
     .nav-ico { font-size: 16px; }
-
     .view { display: none; }
     .view.active { display: block; }
 
-    /* Modal */
     .modal-bg {
-      position: fixed; inset: 0; z-index: 60;
-      background: rgba(0, 0, 0, 0.72);
+      position: fixed; inset: 0; z-index: 60; background: rgba(0, 0, 0, 0.75);
       display: none; align-items: flex-end; justify-content: center;
     }
     .modal-bg.open { display: flex; }
     .modal-sheet {
-      background: var(--bg);
-      border-top: 1px solid #334155;
-      border-radius: 18px 18px 0 0;
-      width: 100%; max-width: 720px;
-      max-height: 88vh; overflow-y: auto;
-      padding: 14px;
+      background: var(--bg); border-top: 1px solid #334155; border-radius: 18px 18px 0 0;
+      width: 100%; max-width: 720px; max-height: 88vh; overflow-y: auto; padding: 14px;
     }
     .toast {
       position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%);
       background: #10b981; color: #052e16; font-weight: 800; font-size: 12px;
       padding: 9px 14px; border-radius: 999px; z-index: 80; display: none;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
     }
     .err-box {
-      background: var(--red-bg);
-      border: 1px solid rgba(239,68,68,0.4);
-      border-radius: 12px;
-      padding: 12px;
-      font-size: 12px;
-      line-height: 1.5;
-      margin-bottom: 12px;
+      background: var(--red-bg); border: 1px solid rgba(239,68,68,0.4);
+      border-radius: 12px; padding: 12px; font-size: 12px; line-height: 1.5; margin-bottom: 12px;
     }
   </style>
 </head>
 <body>
   <header>
     <div>
-      <div class="brand-title">THE VETERAN <span style="color:var(--blue);font-size:12px;">ENTRY</span></div>
-      <div class="brand-sub">Top 3 Rujukan Entry • 10 Coin USDⓈ-M • Mod Manual</div>
+      <div class="brand-title">THE VETERAN <span style="color:var(--green);font-size:11px;">v2.1 STRICT</span></div>
+      <div class="brand-sub">1D + 4H + 1H • Auto Tapis Min Order Binance</div>
     </div>
     <button id="btn-scan" class="btn-refresh" onclick="scanMarket()">🔄 Imbas</button>
   </header>
 
   <div class="container">
-    <!-- Persistent Risk / Modal Bar -->
     <div class="risk-bar">
       <div class="field">
         <label>Modal (USDT)</label>
-        <input id="inp-equity" type="number" min="10" step="10" value="200" onchange="savePrefsAndRender()" />
+        <input id="inp-equity" type="number" min="10" step="10" value="188" onchange="savePrefsAndRender()" />
       </div>
       <div class="field">
         <label>Risiko / Trade</label>
         <select id="inp-risk" onchange="savePrefsAndRender()">
-          <option value="0.0025">0.25% (Live)</option>
-          <option value="0.0035" selected>0.35% (Demo)</option>
-          <option value="0.0050">0.50% (Maks)</option>
+          <option value="0.0025">0.25% (Ketat)</option>
+          <option value="0.0035">0.35% (Demo)</option>
+          <option value="0.0050" selected>0.50% (Had SOP)</option>
+          <option value="0.0100">1.00% (Tinggi ⚠️)</option>
         </select>
       </div>
       <div class="field">
@@ -382,28 +235,27 @@
     </div>
 
     <div class="status-strip">
-      <span id="feed-status">Menyambung ke Binance...</span>
+      <span id="feed-status">Menyambung ke Binance Futures...</span>
       <span id="last-updated">-</span>
     </div>
 
-    <!-- VIEW 1: TOP 3 ENTRY REFERENCE -->
+    <!-- VIEW 1: TOP 3 -->
     <section id="view-top3" class="view active">
-      <div class="disclaimer-box">
-        <strong>Mod Rujukan Manual (Tiada Auto-Trade):</strong> Memaparkan <strong>Top 3 coin terbaik</strong> daripada 10 coin berdasarkan closed candle <strong>Trend 1D + Setup 4H</strong>. Skor teknikal ialah indeks konfluens indikator, <strong>BUKAN</strong> kebarangkalian menang.
-      </div>
+      <div id="market-banner"></div>
       <div id="error-container"></div>
       <div id="top3-container">
         <div class="card" style="text-align:center;color:var(--muted);padding:26px;">
-          Mengambil data candle 1D & 4H daripada Binance...
+          Menarik data 1D, 4H, 1H & syarat minimum order (exchangeInfo) daripada Binance Futures...
         </div>
       </div>
     </section>
 
-    <!-- VIEW 2: SCANNER ALL 10 COINS -->
+    <!-- VIEW 2: ALL 10 COINS -->
     <section id="view-scanner" class="view">
       <div class="filter-row">
         <button class="chip-btn active" onclick="setFilter('ALL', this)">Semua (10)</button>
-        <button class="chip-btn" onclick="setFilter('SETUP', this)">Ada Setup</button>
+        <button class="chip-btn" onclick="setFilter('READY', this)">Sah Entry</button>
+        <button class="chip-btn" onclick="setFilter('ELIGIBLE', this)">Lepas Min Binance</button>
         <button class="chip-btn" onclick="setFilter('BULLISH', this)">1D Bullish</button>
         <button class="chip-btn" onclick="setFilter('BEARISH', this)">1D Bearish</button>
       </div>
@@ -424,41 +276,40 @@
           </div>
         </div>
         <div style="font-size:11px;color:var(--muted);">
-          Tekan <strong>"📝 Simpan Paper"</strong> pada mana-mana kad Top 3 untuk log entry simulasi di telefon anda (termasuk tolakan anggaran fee 0.1%).
+          Uji sekurang-kurangnya 10–15 setup di <strong>Paper Lab / Binance Demo</strong> sebelum guna duit Live.
         </div>
       </div>
       <div id="paper-trades-list"></div>
     </section>
 
-    <!-- VIEW 4: DISIPLIN & INFO -->
+    <!-- VIEW 4: DISIPLIN & BINANCE RULES -->
     <section id="view-rules" class="view">
       <div class="card">
-        <div style="font-weight:800;font-size:15px;margin-bottom:6px;">🛡️ Semakan Disiplin Sebelum Tekan Order</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Tandakan setiap perkara sebelum buka posisi manual di Binance:</div>
-        <label class="check-item"><input type="checkbox" /> <span>Margin sudah ditetapkan kepada <strong>ISOLATED</strong> dan Leverage <strong>≤ 5×</strong> (Mode <strong>One-Way</strong>).</span></label>
-        <label class="check-item"><input type="checkbox" /> <span>Jumlah risiko jika kena SL tidak melebihi <strong>0.50%</strong> modal (0.25% Live / 0.35% Demo).</span></label>
-        <label class="check-item"><input type="checkbox" /> <span>Tiada berita makro besar (CPI / FOMC / NFP) dalam masa 1–2 jam terdekat.</span></label>
-        <label class="check-item"><input type="checkbox" /> <span>Hanya pegang maksimum <strong>1 posisi aktif</strong> pada satu masa (jangan *revenge trade* jika kena SL).</span></label>
-        <label class="check-item"><input type="checkbox" /> <span>Jika status coin ialah <strong>WAIT</strong>, jangan masuk pasaran (Market) — tunggu harga jejak zon limit & candle tutup sah.</span></label>
+        <div style="font-weight:800;font-size:15px;margin-bottom:6px;">🛡️ Semakan Wajib Sebelum Order Manual</div>
+        <label class="check-item"><input type="checkbox" /> <span>Kad berstatus <strong>SAH ENTRY ✓</strong> (bukan WAIT) dan <strong>LEPAS MIN BINANCE</strong>.</span></label>
+        <label class="check-item"><input type="checkbox" /> <span>Tetapan Binance: <strong>ISOLATED</strong>, Leverage <strong>≤ 5×</strong>, Mode <strong>One-Way</strong>.</span></label>
+        <label class="check-item"><input type="checkbox" /> <span>Masuk guna <strong>Limit Order</strong> pada Zon Entry (elak kejar candle panjang).</span></label>
+        <label class="check-item"><input type="checkbox" /> <span>Pasang <strong>SL (Mark Price)</strong> terus bersama order — jangan biarkan posisi terbuka tanpa SL.</span></label>
+        <label class="check-item"><input type="checkbox" /> <span>Pegang maksimum <strong>1 posisi aktif</strong> sahaja. Jika kena SL, berhenti dan tunggu candle 4H seterusnya.</span></label>
         <button class="btn btn-sec" style="width:100%;margin-top:10px;" onclick="resetChecklist()">Reset Semakan</button>
       </div>
 
       <div class="card">
-        <div style="font-weight:800;font-size:14px;margin-bottom:6px;">⚙️ Jika Data Binance Gagal Dimuatkan di Telco Malaysia</div>
-        <div style="font-size:12px;color:var(--muted);line-height:1.5;">
-          App ini cuba menyambung secara automatik melalui <code>fapi.binance.com</code>, mirror <code>fapi1/fapi2</code>, dan fallback <code>data-api.binance.vision</code>.<br><br>
-          Jika telco menyekat DNS Binance pada telefon Android anda:<br>
-          Buka <strong>Settings Android → Network & Internet → Private DNS → Private DNS provider hostname</strong> → taip <code>1dot1dot1dot1.cloudflare-dns.com</code> atau <code>dns.google</code> → Save, kemudian tekan <strong>🔄 Imbas</strong> semula.
+        <div style="font-weight:800;font-size:14px;margin-bottom:6px;">📌 Kenapa Top 3 Auto-Tapis Coin Modal Kecil</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.55;">
+          • <strong>BTCUSDT</strong> perlukan minimum <strong>$100 Notional</strong> di Binance (0.001 BTC). Untuk modal bawah ~$300 pada risiko 0.5%, BTC tidak lepas had minimum dan akan ditolak keluar dari Top 3 secara automatik.<br>
+          • <strong>ETHUSDT</strong> perlukan minimum <strong>$20 Notional</strong>.<br>
+          • <strong>Altcoin ($5 Min):</strong> SOL, XRP, SUI, LINK, AVAX, UNI, BNB, AAVE jauh lebih tepat untuk modal $150–$500 supaya kuantiti sentiasa sah di Binance tanpa perlu besarkan risiko.
         </div>
       </div>
     </section>
   </div>
 
-  <!-- Detail Modal for any of the 10 coins -->
+  <!-- Detail Modal -->
   <div id="detail-modal" class="modal-bg" onclick="if(event.target===this) closeModal()">
     <div class="modal-sheet">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <strong style="font-size:15px;">Perincian Rujukan Coin</strong>
+        <strong style="font-size:15px;">Perincian Analisis Coin</strong>
         <button class="btn btn-sec" style="padding:6px 12px;" onclick="closeModal()">Tutup</button>
       </div>
       <div id="modal-body"></div>
@@ -480,35 +331,49 @@
       "AAVEUSDT", "XRPUSDT", "AVAXUSDT", "SUIUSDT", "UNIUSDT"
     ];
 
+    const FALLBACK_FILTERS = {
+      BTCUSDT:  { tickSize: 0.1,    stepSize: 0.001, minQty: 0.001, minNotional: 100 },
+      ETHUSDT:  { tickSize: 0.01,   stepSize: 0.001, minQty: 0.001, minNotional: 20 },
+      SOLUSDT:  { tickSize: 0.01,   stepSize: 0.01,  minQty: 0.01,  minNotional: 5 },
+      BNBUSDT:  { tickSize: 0.01,   stepSize: 0.01,  minQty: 0.01,  minNotional: 5 },
+      LINKUSDT: { tickSize: 0.001,  stepSize: 0.01,  minQty: 0.01,  minNotional: 5 },
+      AAVEUSDT: { tickSize: 0.01,   stepSize: 0.01,  minQty: 0.01,  minNotional: 5 },
+      XRPUSDT:  { tickSize: 0.0001, stepSize: 0.1,   minQty: 0.1,   minNotional: 5 },
+      AVAXUSDT: { tickSize: 0.001,  stepSize: 0.1,   minQty: 0.1,   minNotional: 5 },
+      SUIUSDT:  { tickSize: 0.0001, stepSize: 0.1,   minQty: 0.1,   minNotional: 5 },
+      UNIUSDT:  { tickSize: 0.001,  stepSize: 0.1,   minQty: 0.1,   minNotional: 5 }
+    };
+
     const ENDPOINTS = [
       { name: "Binance Futures (fapi)", base: "https://fapi.binance.com", futures: true },
       { name: "Binance Futures Mirror 1", base: "https://fapi1.binance.com", futures: true },
       { name: "Binance Futures Mirror 2", base: "https://fapi2.binance.com", futures: true },
-      { name: "Binance Public Vision (Spot Fallback)", base: "https://data-api.binance.vision", futures: false }
+      { name: "Binance Vision (Fallback)", base: "https://data-api.binance.vision", futures: false }
     ];
 
+    let liveFilters = JSON.parse(JSON.stringify(FALLBACK_FILTERS));
     let activeEndpoint = null;
     let scanResults = [];
     let currentFilter = "ALL";
 
-    // --- Preferences & Storage ---
     function loadPrefs() {
-      const saved = JSON.parse(localStorage.getItem("vet_prefs") || "{}");
+      const saved = JSON.parse(localStorage.getItem("vet_v21_prefs") || "{}");
       if (saved.equity) document.getElementById("inp-equity").value = saved.equity;
       if (saved.risk) document.getElementById("inp-risk").value = saved.risk;
       if (saved.lev) document.getElementById("inp-lev").value = saved.lev;
     }
 
     function getPrefs() {
-      const equity = Math.max(10, parseFloat(document.getElementById("inp-equity").value) || 200);
-      const risk = Math.min(0.005, Math.max(0.001, parseFloat(document.getElementById("inp-risk").value) || 0.0035));
+      const equity = Math.max(10, parseFloat(document.getElementById("inp-equity").value) || 188);
+      const risk = Math.min(0.01, Math.max(0.001, parseFloat(document.getElementById("inp-risk").value) || 0.005));
       const lev = Math.min(5, Math.max(1, parseInt(document.getElementById("inp-lev").value) || 5));
       return { equity, risk, lev };
     }
 
     function savePrefsAndRender() {
-      localStorage.setItem("vet_prefs", JSON.stringify(getPrefs()));
+      localStorage.setItem("vet_v21_prefs", JSON.stringify(getPrefs()));
       if (scanResults.length) {
+        sortResults();
         renderTop3();
         renderScannerList();
       }
@@ -521,66 +386,77 @@
       setTimeout(() => { t.style.display = "none"; }, 2200);
     }
 
-    function fmtPrice(p) {
-      if (!isFinite(p)) return "-";
-      if (p >= 1000) return p.toFixed(1);
-      if (p >= 100) return p.toFixed(2);
-      if (p >= 10) return p.toFixed(3);
-      return p.toFixed(4);
+    function stepDecimals(step) {
+      const s = String(step);
+      if (s.includes("e-")) return parseInt(s.split("e-")[1], 10);
+      const parts = s.split(".");
+      return parts.length > 1 ? parts[1].replace(/0+$/, "").length : 0;
     }
 
-    function fmtQty(q) {
-      if (!isFinite(q) || q <= 0) return "0";
-      if (q >= 100) return q.toFixed(1);
-      if (q >= 1) return q.toFixed(2);
-      return q.toFixed(4);
+    function floorStep(val, step) {
+      if (!step || step <= 0) return val;
+      const dec = stepDecimals(step);
+      return Number((Math.floor((val + 1e-12) / step) * step).toFixed(dec));
     }
 
-    // --- Technical Indicators (Pure JS, Strictly Closed Candles) ---
+    function ceilStep(val, step) {
+      if (!step || step <= 0) return val;
+      const dec = stepDecimals(step);
+      return Number((Math.ceil((val - 1e-12) / step) * step).toFixed(dec));
+    }
+
+    function roundTick(val, symbol) {
+      const f = liveFilters[symbol] || FALLBACK_FILTERS[symbol];
+      return floorStep(val, f.tickSize);
+    }
+
+    function fmtPrice(val, symbol) {
+      if (!isFinite(val)) return "-";
+      const f = liveFilters[symbol] || FALLBACK_FILTERS[symbol];
+      const dec = f ? stepDecimals(f.tickSize) : (val >= 100 ? 2 : 4);
+      return val.toFixed(dec);
+    }
+
+    function fmtQty(val, symbol) {
+      if (!isFinite(val) || val <= 0) return "0";
+      const f = liveFilters[symbol] || FALLBACK_FILTERS[symbol];
+      const dec = f ? stepDecimals(f.stepSize) : 3;
+      return val.toFixed(dec);
+    }
+
+    // --- Technical Indicators (Closed Candles Only) ---
     function calcEMA(values, period) {
       const k = 2 / (period + 1);
       const out = new Array(values.length);
       out[0] = values[0];
-      for (let i = 1; i < values.length; i++) {
-        out[i] = values[i] * k + out[i - 1] * (1 - k);
-      }
+      for (let i = 1; i < values.length; i++) out[i] = values[i] * k + out[i - 1] * (1 - k);
       return out;
     }
 
     function calcRSI(closes, period = 14) {
-      let avgGain = 0, avgLoss = 0;
+      let g = 0, l = 0;
       for (let i = 1; i <= period; i++) {
-        const diff = closes[i] - closes[i - 1];
-        if (diff >= 0) avgGain += diff; else avgLoss -= diff;
+        const d = closes[i] - closes[i - 1];
+        if (d >= 0) g += d; else l -= d;
       }
-      avgGain /= period;
-      avgLoss /= period;
+      g /= period; l /= period;
       for (let i = period + 1; i < closes.length; i++) {
-        const diff = closes[i] - closes[i - 1];
-        const g = diff > 0 ? diff : 0;
-        const l = diff < 0 ? -diff : 0;
-        avgGain = (avgGain * (period - 1) + g) / period;
-        avgLoss = (avgLoss * (period - 1) + l) / period;
+        const d = closes[i] - closes[i - 1];
+        g = (g * (period - 1) + (d > 0 ? d : 0)) / period;
+        l = (l * (period - 1) + (d < 0 ? -d : 0)) / period;
       }
-      if (avgLoss === 0) return 100;
-      const rs = avgGain / avgLoss;
-      return 100 - (100 / (1 + rs));
+      if (l === 0) return 100;
+      return 100 - (100 / (1 + g / l));
     }
 
     function calcATR(candles, period = 14) {
       const trs = [];
       for (let i = 1; i < candles.length; i++) {
-        const c = candles[i], prev = candles[i - 1];
-        trs.push(Math.max(
-          c.high - c.low,
-          Math.abs(c.high - prev.close),
-          Math.abs(c.low - prev.close)
-        ));
+        const c = candles[i], p = candles[i - 1];
+        trs.push(Math.max(c.high - c.low, Math.abs(c.high - p.close), Math.abs(c.low - p.close)));
       }
       let atr = trs.slice(0, period).reduce((a, b) => a + b, 0) / period;
-      for (let i = period; i < trs.length; i++) {
-        atr = (atr * (period - 1) + trs[i]) / period;
-      }
+      for (let i = period; i < trs.length; i++) atr = (atr * (period - 1) + trs[i]) / period;
       return atr;
     }
 
@@ -596,222 +472,311 @@
       }));
     }
 
-    // --- Market Evaluation Logic (1D Trend + 4H Pullback/Rejection Setup) ---
-    function analyzeCoin(symbol, k1dRaw, k4hRaw, markPrice, fundingRate, change24h) {
-      // Strictly exclude the currently forming candle (use closed candles only)
+    // --- STRICT 1D + 4H + 1H ANALYSIS ENGINE ---
+    function analyzeCoin(symbol, k1dRaw, k4hRaw, k1hRaw, markPrice, fundingRate, change24h) {
       const d1 = parseKlines(k1dRaw).slice(0, -1);
       const h4 = parseKlines(k4hRaw).slice(0, -1);
+      const h1 = parseKlines(k1hRaw).slice(0, -1);
 
-      const d1Closes = d1.map(c => c.close);
-      const d1Ema20 = calcEMA(d1Closes, 20);
-      const d1Ema50 = calcEMA(d1Closes, 50);
+      const d1C = d1.map(c => c.close);
+      const d1E20 = calcEMA(d1C, 20);
+      const d1E50 = calcEMA(d1C, 50);
       const last1d = d1[d1.length - 1];
-      const e20_1d = d1Ema20[d1Ema20.length - 1];
-      const e50_1d = d1Ema50[d1Ema50.length - 1];
+      const e20_1d = d1E20[d1E20.length - 1];
+      const e50_1d = d1E50[d1E50.length - 1];
+      const e50_1d_prev = d1E50[d1E50.length - 4];
 
       let trend1d = "NEUTRAL";
-      if (last1d.close > e50_1d && e20_1d > e50_1d) trend1d = "BULLISH";
-      else if (last1d.close < e50_1d && e20_1d < e50_1d) trend1d = "BEARISH";
+      if (last1d.close > e50_1d && e20_1d > e50_1d && e50_1d >= e50_1d_prev * 0.998) trend1d = "BULLISH";
+      else if (last1d.close < e50_1d && e20_1d < e50_1d && e50_1d <= e50_1d_prev * 1.002) trend1d = "BEARISH";
 
-      const h4Closes = h4.map(c => c.close);
-      const h4Ema20 = calcEMA(h4Closes, 20);
-      const h4Ema50 = calcEMA(h4Closes, 50);
+      const h4C = h4.map(c => c.close);
+      const h4E20 = calcEMA(h4C, 20);
+      const h4E50 = calcEMA(h4C, 50);
       const last4h = h4[h4.length - 1];
       const prev4h = h4[h4.length - 2];
-      const e20_4h = h4Ema20[h4Ema20.length - 1];
-      const e50_4h = h4Ema50[h4Ema50.length - 1];
-      const rsi4h = calcRSI(h4Closes, 14);
+      const e20_4h = h4E20[h4E20.length - 1];
+      const e50_4h = h4E50[h4E50.length - 1];
+      const rsi4h = calcRSI(h4C, 14);
       const atr4h = calcATR(h4, 14);
+
+      // 1H momentum & micro-structure filter (stops entering against 1H dump/pump)
+      const h1C = h1.map(c => c.close);
+      const h1E20 = calcEMA(h1C, 20);
+      const last1h = h1[h1.length - 1];
+      const prev1h = h1[h1.length - 2];
+      const e20_1h = h1E20[h1E20.length - 1];
 
       const recentVols = h4.slice(-20).map(c => c.volume);
       const avgVol = recentVols.reduce((a, b) => a + b, 0) / Math.max(1, recentVols.length);
       const volRatio = last4h.volume / Math.max(avgVol, 1e-9);
 
-      const swingHigh = Math.max(...h4.slice(-20).map(c => c.high));
-      const swingLow = Math.min(...h4.slice(-20).map(c => c.low));
+      const majorHigh = Math.max(...h4.slice(-24).map(c => c.high));
+      const majorLow = Math.min(...h4.slice(-24).map(c => c.low));
+      const localLow = Math.min(...h4.slice(-6).map(c => c.low));
+      const localHigh = Math.max(...h4.slice(-6).map(c => c.high));
 
+      const gates = {
+        trend1dOk: false,
+        struct4hOk: false,
+        confirm1hOk: false,
+        roomToSrOk: false,
+        momentumOk: false
+      };
+
+      let bias = trend1d === "BEARISH" ? "SHORT" : (trend1d === "BULLISH" ? "LONG" : "NONE");
+      let signal = "WAIT";
       let score = 0;
-      let signal = "WAIT"; // LONG_SETUP | SHORT_SETUP | WAIT
-      let bias = trend1d === "BEARISH" ? "SHORT" : "LONG";
-      let reasons = [];
-      let positives = [];
-
-      const extFundingLong = fundingRate !== null && fundingRate > 0.0005;
-      const extFundingShort = fundingRate !== null && fundingRate < -0.0005;
-
-      let entryRef, slRef, tp1Ref, tp2Ref;
+      let failReasons = [];
+      let triggerHint = "";
+      let entryRef = null, slRef = null, tp1Ref = null, tp2Ref = null, rrToSr = 0;
 
       if (trend1d === "BULLISH") {
-        bias = "LONG";
-        score += 30;
-        positives.push("Trend 1D BULLISH (harga & EMA20 di atas EMA50)");
+        gates.trend1dOk = true;
+        score += 20;
 
-        const pullbackOk = (last4h.low <= e20_4h * 1.008) && (last4h.close > e20_4h) && (last4h.close > prev4h.close);
-        const nearEma = Math.abs(markPrice - e20_4h) / markPrice <= 0.015;
-        const rsiOk = rsi4h >= 42 && rsi4h <= 66;
-        const volOk = volRatio >= 0.85;
-
-        if (pullbackOk) { score += 30; positives.push("Reclaim EMA20 4H bersih"); }
-        else if (nearEma) { score += 15; reasons.push("Harga hampir EMA20 4H — tunggu candle 4H tutup kuat di atas EMA20"); }
-        else { reasons.push("Harga terlalu jauh dari EMA20 4H (jangan kejar, tunggu pullback)"); }
-
-        if (rsiOk) { score += 20; positives.push(`RSI 4H sihat (${rsi4h.toFixed(1)})`); }
-        else { reasons.push(`RSI 4H (${rsi4h.toFixed(1)}) di luar zon ideal 42–66`); }
-
-        if (volOk) { score += 20; positives.push(`Volume menyokong (${volRatio.toFixed(2)}× purata)`); }
-        else { reasons.push(`Volume 4H perlahan (${volRatio.toFixed(2)}×)`); }
-
-        if (extFundingLong) {
-          score = Math.max(0, score - 15);
-          reasons.push(`Funding tinggi (+${(fundingRate * 100).toFixed(3)}%) — risiko long squeeze`);
-        }
-
-        if (pullbackOk && rsiOk && volOk && !extFundingLong) {
-          signal = "LONG_SETUP";
-          entryRef = markPrice;
+        // 4H structure + pullback without overextension
+        const distFromEma = (markPrice - e20_4h) / Math.max(atr4h, 1e-9);
+        const h4Aligned = (e20_4h > e50_4h) && (last4h.close > e20_4h) && (markPrice >= e20_4h * 0.994);
+        const notChasing = distFromEma >= -0.25 && distFromEma <= 1.35;
+        if (h4Aligned && notChasing) {
+          gates.struct4hOk = true;
+          score += 20;
+        } else if (!h4Aligned) {
+          failReasons.push("Struktur 4H belum selari bullish (elak tangkap pisau jatuh)");
+          triggerHint = `Tunggu 4H tutup di atas EMA20 ($${fmtPrice(e20_4h, symbol)}) & EMA20 > EMA50`;
         } else {
-          // Reference limit zone to watch if WAIT
-          entryRef = Math.min(markPrice, e20_4h);
+          failReasons.push(`Harga terlalu jauh dari EMA20 4H (${distFromEma.toFixed(1)}× ATR — jangan kejar pucuk)`);
+          triggerHint = `Tunggu pullback dekat zon Limit EMA20 4H ($${fmtPrice(e20_4h, symbol)})`;
         }
-        slRef = Math.min(last4h.low, entryRef - 1.5 * atr4h);
-        const dist = Math.max(entryRef - slRef, atr4h * 0.8);
-        slRef = entryRef - dist;
-        tp1Ref = entryRef + 1.5 * dist;
-        tp2Ref = entryRef + 2.2 * dist;
+
+        // 1H confirmation: closed 1H candle above 1H EMA20 & not dumping
+        const h1Confirm = (last1h.close > e20_1h) && (last1h.close >= prev1h.close * 0.998) && (last1h.close > last1h.open);
+        if (h1Confirm) {
+          gates.confirm1hOk = true;
+          score += 20;
+        } else {
+          failReasons.push("Candle 1H belum sahkan momentum naik (tunggu 1H tutup hijau di atas EMA20 1H)");
+          triggerHint = triggerHint || `Tunggu candle 1H hijau tutup di atas $${fmtPrice(e20_1h, symbol)}`;
+        }
+
+        // Limit Entry slightly at pullback or mark (never chasing above mark)
+        const limitEntry = Math.min(markPrice, Math.max(e20_4h, markPrice - 0.15 * atr4h));
+        entryRef = roundTick(limitEntry, symbol);
+        const rawSl = Math.min(localLow - 0.35 * atr4h, entryRef - 1.15 * atr4h);
+        const clampedDist = Math.min(Math.max(entryRef - rawSl, 1.0 * atr4h), 2.3 * atr4h);
+        slRef = roundTick(entryRef - clampedDist, symbol);
+        const actualDist = Math.max(entryRef - slRef, 1e-9);
+        tp1Ref = roundTick(entryRef + 1.5 * actualDist, symbol);
+        tp2Ref = roundTick(entryRef + 2.2 * actualDist, symbol);
+
+        // Room to 4H resistance >= 1.25R
+        rrToSr = (majorHigh - entryRef) / actualDist;
+        if (rrToSr >= 1.25 || entryRef >= majorHigh * 0.998) {
+          gates.roomToSrOk = true;
+          score += 20;
+        } else {
+          failReasons.push(`Terlalu rapat ke resistance 4H ($${fmtPrice(majorHigh, symbol)}) — ruang cuma ${rrToSr.toFixed(2)}R`);
+        }
+
+        const rsiOk = rsi4h >= 44 && rsi4h <= 66;
+        const volOk = volRatio >= 0.80;
+        const fundOk = fundingRate === null || fundingRate <= 0.0005;
+        if (rsiOk && volOk && fundOk) {
+          gates.momentumOk = true;
+          score += 20;
+        } else {
+          if (!rsiOk) failReasons.push(`RSI 4H (${rsi4h.toFixed(1)}) di luar zon sihat 44–66`);
+          if (!volOk) failReasons.push(`Volume 4H perlahan (${volRatio.toFixed(2)}× purata)`);
+          if (!fundOk) failReasons.push(`Funding tinggi (+${(fundingRate * 100).toFixed(3)}%)`);
+        }
+
+        if (gates.trend1dOk && gates.struct4hOk && gates.confirm1hOk && gates.roomToSrOk && gates.momentumOk) {
+          signal = "LONG_SETUP";
+        }
 
       } else if (trend1d === "BEARISH") {
-        bias = "SHORT";
-        score += 30;
-        positives.push("Trend 1D BEARISH (harga & EMA20 di bawah EMA50)");
+        gates.trend1dOk = true;
+        score += 20;
 
-        const rejOk = (last4h.high >= e20_4h * 0.992) && (last4h.close < e20_4h) && (last4h.close < prev4h.close);
-        const nearEma = Math.abs(markPrice - e20_4h) / markPrice <= 0.015;
-        const rsiOk = rsi4h >= 34 && rsi4h <= 58;
-        const volOk = volRatio >= 0.85;
-
-        if (rejOk) { score += 30; positives.push("Rejection EMA20 4H bersih"); }
-        else if (nearEma) { score += 15; reasons.push("Harga hampir EMA20 4H — tunggu candle 4H tutup lemah di bawah EMA20"); }
-        else { reasons.push("Harga jauh di bawah EMA20 4H (jangan kejar, tunggu retrace naik)"); }
-
-        if (rsiOk) { score += 20; positives.push(`RSI 4H selari (${rsi4h.toFixed(1)})`); }
-        else { reasons.push(`RSI 4H (${rsi4h.toFixed(1)}) di luar zon ideal 34–58`); }
-
-        if (volOk) { score += 20; positives.push(`Volume menyokong (${volRatio.toFixed(2)}× purata)`); }
-        else { reasons.push(`Volume 4H perlahan (${volRatio.toFixed(2)}×)`); }
-
-        if (extFundingShort) {
-          score = Math.max(0, score - 15);
-          reasons.push(`Funding negatif melampau (${(fundingRate * 100).toFixed(3)}%) — risiko short squeeze`);
-        }
-
-        if (rejOk && rsiOk && volOk && !extFundingShort) {
-          signal = "SHORT_SETUP";
-          entryRef = markPrice;
+        const distFromEma = (e20_4h - markPrice) / Math.max(atr4h, 1e-9);
+        const h4Aligned = (e20_4h < e50_4h) && (last4h.close < e20_4h) && (markPrice <= e20_4h * 1.006);
+        const notChasing = distFromEma >= -0.25 && distFromEma <= 1.35;
+        if (h4Aligned && notChasing) {
+          gates.struct4hOk = true;
+          score += 20;
+        } else if (!h4Aligned) {
+          failReasons.push("Struktur 4H belum selari bearish (elak short lawan rebound)");
+          triggerHint = `Tunggu 4H tutup bawah EMA20 ($${fmtPrice(e20_4h, symbol)}) & EMA20 < EMA50`;
         } else {
-          entryRef = Math.max(markPrice, e20_4h);
+          failReasons.push(`Harga sudah terlalu jauh jatuh (${distFromEma.toFixed(1)}× ATR — jangan kejar dasar)`);
+          triggerHint = `Tunggu retrace naik ke zon Limit EMA20 4H ($${fmtPrice(e20_4h, symbol)})`;
         }
-        slRef = Math.max(last4h.high, entryRef + 1.5 * atr4h);
-        const dist = Math.max(slRef - entryRef, atr4h * 0.8);
-        slRef = entryRef + dist;
-        tp1Ref = entryRef - 1.5 * dist;
-        tp2Ref = entryRef - 2.2 * dist;
 
+        const h1Confirm = (last1h.close < e20_1h) && (last1h.close <= prev1h.close * 1.002) && (last1h.close < last1h.open);
+        if (h1Confirm) {
+          gates.confirm1hOk = true;
+          score += 20;
+        } else {
+          failReasons.push("Candle 1H belum sahkan tekanan turun (tunggu 1H tutup merah bawah EMA20 1H)");
+          triggerHint = triggerHint || `Tunggu candle 1H merah tutup bawah $${fmtPrice(e20_1h, symbol)}`;
+        }
+
+        const limitEntry = Math.max(markPrice, Math.min(e20_4h, markPrice + 0.15 * atr4h));
+        entryRef = roundTick(limitEntry, symbol);
+        const rawSl = Math.max(localHigh + 0.35 * atr4h, entryRef + 1.15 * atr4h);
+        const clampedDist = Math.min(Math.max(rawSl - entryRef, 1.0 * atr4h), 2.3 * atr4h);
+        slRef = roundTick(entryRef + clampedDist, symbol);
+        const actualDist = Math.max(slRef - entryRef, 1e-9);
+        tp1Ref = roundTick(entryRef - 1.5 * actualDist, symbol);
+        tp2Ref = roundTick(entryRef - 2.2 * actualDist, symbol);
+
+        rrToSr = (entryRef - majorLow) / actualDist;
+        if (rrToSr >= 1.25 || entryRef <= majorLow * 1.002) {
+          gates.roomToSrOk = true;
+          score += 20;
+        } else {
+          failReasons.push(`Terlalu rapat ke support 4H ($${fmtPrice(majorLow, symbol)}) — ruang cuma ${rrToSr.toFixed(2)}R`);
+        }
+
+        const rsiOk = rsi4h >= 34 && rsi4h <= 56;
+        const volOk = volRatio >= 0.80;
+        const fundOk = fundingRate === null || fundingRate >= -0.0005;
+        if (rsiOk && volOk && fundOk) {
+          gates.momentumOk = true;
+          score += 20;
+        } else {
+          if (!rsiOk) failReasons.push(`RSI 4H (${rsi4h.toFixed(1)}) di luar zon ideal 34–56`);
+          if (!volOk) failReasons.push(`Volume 4H perlahan (${volRatio.toFixed(2)}× purata)`);
+          if (!fundOk) failReasons.push(`Funding terlalu negatif (${(fundingRate * 100).toFixed(3)}%)`);
+        }
+
+        if (gates.trend1dOk && gates.struct4hOk && gates.confirm1hOk && gates.roomToSrOk && gates.momentumOk) {
+          signal = "SHORT_SETUP";
+        }
       } else {
-        bias = markPrice >= e20_4h ? "LONG" : "SHORT";
-        score = 20;
-        reasons.push("Trend 1D NEUTRAL / Sideways — elak trade lawan struktur, kekal WAIT");
-        entryRef = e20_4h;
-        const dist = Math.max(atr4h * 1.5, markPrice * 0.015);
-        slRef = bias === "LONG" ? entryRef - dist : entryRef + dist;
-        tp1Ref = bias === "LONG" ? entryRef + 1.5 * dist : entryRef - 1.5 * dist;
-        tp2Ref = bias === "LONG" ? entryRef + 2.2 * dist : entryRef - 2.2 * dist;
+        failReasons.push("Trend 1D SIDEWAYS / NEUTRAL — pasaran tiada arah jelas, kekal tunai");
+        triggerHint = `Tunggu 1D pecah struktur atas $${fmtPrice(majorHigh, symbol)} atau bawah $${fmtPrice(majorLow, symbol)}`;
       }
 
       return {
-        symbol,
-        trend1d,
-        bias,
-        signal,
-        score: Math.round(score),
-        markPrice,
-        change24h,
-        entryRef,
-        slRef,
-        tp1Ref,
-        tp2Ref,
-        ema20_4h: e20_4h,
-        ema50_4h: e50_4h,
-        rsi4h,
-        atr4h,
-        volRatio,
-        swingHigh,
-        swingLow,
-        fundingRate,
-        positives,
-        reasons
+        symbol, trend1d, bias, signal, score,
+        markPrice, change24h,
+        entryRef, slRef, tp1Ref, tp2Ref,
+        ema20_4h: e20_4h, ema50_4h: e50_4h, ema20_1h: e20_1h,
+        rsi4h, atr4h, volRatio, fundingRate,
+        majorHigh, majorLow, rrToSr,
+        gates, failReasons, triggerHint
       };
     }
 
-    // --- Sizing Math (Strict 0.50% Hard Cap & 5x Isolated Cap) ---
+    // --- EXACT BINANCE FUTURES SIZING & MIN-NOTIONAL VALIDATOR ---
     function computeSizing(item) {
       const { equity, risk, lev } = getPrefs();
-      const stopDist = Math.abs(item.entryRef - item.slRef);
-      const riskUsdt = equity * risk;
-      let qty = stopDist > 0 ? riskUsdt / stopDist : 0;
+      const f = liveFilters[item.symbol] || FALLBACK_FILTERS[item.symbol];
+      // Even for NEUTRAL coins, check basic minNotional affordability against equity
+      const refPrice = item.entryRef || item.markPrice;
+      const refDist = item.slRef ? Math.abs(refPrice - item.slRef) : Math.max(item.atr4h * 1.4, refPrice * 0.018);
+
+      const targetRiskUsdt = equity * risk;
+      let rawQty = refDist > 0 ? targetRiskUsdt / refDist : 0;
       const maxNotional = equity * lev * 0.90;
-      if (qty * item.entryRef > maxNotional) {
-        qty = maxNotional / item.entryRef;
-      }
-      const notional = qty * item.entryRef;
+      if (rawQty * refPrice > maxNotional) rawQty = maxNotional / refPrice;
+
+      const qty = floorStep(rawQty, f.stepSize);
+      const notional = qty * refPrice;
       const margin = notional / lev;
-      const actualLoss = qty * stopDist;
-      const tp1Profit = qty * Math.abs(item.tp1Ref - item.entryRef);
-      const tp2Profit = qty * Math.abs(item.tp2Ref - item.entryRef);
-      const slPct = (stopDist / item.entryRef) * 100;
-      return { qty, notional, margin, actualLoss, tp1Profit, tp2Profit, slPct, lev, riskPct: risk * 100 };
+      const actualLoss = qty * refDist;
+      const estFee = notional * 0.001;
+      const tp1Profit = item.tp1Ref ? (qty * Math.abs(item.tp1Ref - refPrice) - estFee) : 0;
+      const tp2Profit = item.tp2Ref ? (qty * Math.abs(item.tp2Ref - refPrice) - estFee) : 0;
+      const slPct = (refDist / refPrice) * 100;
+
+      const minQtyForNotional = ceilStep(f.minNotional / refPrice, f.stepSize);
+      const effectiveMinQty = Math.max(f.minQty, minQtyForNotional);
+      const minReqNotional = effectiveMinQty * refPrice;
+      const minReqRiskUsdt = effectiveMinQty * refDist;
+      const minReqRiskPct = (minReqRiskUsdt / equity) * 100;
+      const minEquityForCurrentRisk = minReqRiskUsdt / risk;
+
+      const eligible = (qty >= f.minQty) && (notional >= f.minNotional) && (margin <= equity * 0.95);
+
+      return {
+        eligible, qty, notional, margin, actualLoss, estFee,
+        tp1Profit, tp2Profit, slPct, lev,
+        minNotional: f.minNotional, minQty: f.minQty,
+        effectiveMinQty, minReqNotional, minReqRiskUsdt, minReqRiskPct, minEquityForCurrentRisk
+      };
     }
 
-    // --- Live Market Fetch with Multi-Endpoint Fallback ---
+    function sortResults() {
+      scanResults.sort((a, b) => {
+        const sa = computeSizing(a);
+        const sb = computeSizing(b);
+        // Priority 1: Actionable & Eligible for Binance Min Order
+        const aTier = (a.signal !== "WAIT" && sa.eligible) ? 3 : (sa.eligible ? 2 : (a.signal !== "WAIT" ? 1 : 0));
+        const bTier = (b.signal !== "WAIT" && sb.eligible) ? 3 : (sb.eligible ? 2 : (b.signal !== "WAIT" ? 1 : 0));
+        if (bTier !== aTier) return bTier - aTier;
+        if (b.score !== a.score) return b.score - a.score;
+        return b.rrToSr - a.rrToSr;
+      });
+    }
+
     async function fetchJson(url) {
       const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 9000);
+      const t = setTimeout(() => ctrl.abort(), 9500);
       try {
         const res = await fetch(url, { signal: ctrl.signal });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return await res.json();
       } finally {
-        clearTimeout(timer);
+        clearTimeout(t);
       }
     }
 
-    async function findWorkingEndpoint() {
+    async function findEndpointAndFilters() {
       for (const ep of ENDPOINTS) {
         try {
-          const pingPath = ep.futures ? "/fapi/v1/time" : "/api/v3/time";
-          await fetchJson(ep.base + pingPath);
-          return ep;
+          if (ep.futures) {
+            const ex = await fetchJson(ep.base + "/fapi/v1/exchangeInfo");
+            if (ex && Array.isArray(ex.symbols)) {
+              for (const s of ex.symbols) {
+                if (!COINS.includes(s.symbol)) continue;
+                const fm = {};
+                for (const fl of (s.filters || [])) fm[fl.filterType] = fl;
+                liveFilters[s.symbol] = {
+                  tickSize: parseFloat(fm.PRICE_FILTER?.tickSize || FALLBACK_FILTERS[s.symbol].tickSize),
+                  stepSize: parseFloat(fm.LOT_SIZE?.stepSize || FALLBACK_FILTERS[s.symbol].stepSize),
+                  minQty: parseFloat(fm.LOT_SIZE?.minQty || FALLBACK_FILTERS[s.symbol].minQty),
+                  minNotional: parseFloat(fm.MIN_NOTIONAL?.notional || FALLBACK_FILTERS[s.symbol].minNotional)
+                };
+              }
+            }
+            return ep;
+          } else {
+            await fetchJson(ep.base + "/api/v3/time");
+            return ep;
+          }
         } catch (e) {}
       }
-      throw new Error("Semua pelayan Binance gagal dihubungi dari rangkaian anda.");
+      throw new Error("Semua pelayan Binance gagal dihubungi daripada rangkaian anda.");
     }
 
-    async function fetchCoinData(ep, symbol) {
+    async function fetchCoin(ep, symbol) {
       const kPath = ep.futures ? "/fapi/v1/klines" : "/api/v3/klines";
       const tPath = ep.futures ? "/fapi/v1/ticker/24hr" : "/api/v3/ticker/24hr";
-
       const reqs = [
         fetchJson(`${ep.base}${kPath}?symbol=${symbol}&interval=1d&limit=80`),
         fetchJson(`${ep.base}${kPath}?symbol=${symbol}&interval=4h&limit=80`),
+        fetchJson(`${ep.base}${kPath}?symbol=${symbol}&interval=1h&limit=50`),
         fetchJson(`${ep.base}${tPath}?symbol=${symbol}`)
       ];
-      if (ep.futures) {
-        reqs.push(fetchJson(`${ep.base}/fapi/v1/premiumIndex?symbol=${symbol}`));
-      }
-      const [k1d, k4h, ticker, prem] = await Promise.all(reqs);
+      if (ep.futures) reqs.push(fetchJson(`${ep.base}/fapi/v1/premiumIndex?symbol=${symbol}`));
+      const [k1d, k4h, k1h, ticker, prem] = await Promise.all(reqs);
       const markPrice = prem ? parseFloat(prem.markPrice) : parseFloat(ticker.lastPrice);
       const fundingRate = prem ? parseFloat(prem.lastFundingRate) : null;
       const change24h = parseFloat(ticker.priceChangePercent || 0);
-      return analyzeCoin(symbol, k1d, k4h, markPrice, fundingRate, change24h);
+      return analyzeCoin(symbol, k1d, k4h, k1h, markPrice, fundingRate, change24h);
     }
 
     async function scanMarket() {
@@ -823,138 +788,178 @@
       errBox.innerHTML = "";
 
       try {
-        statusEl.textContent = "Mencari sambungan Binance...";
-        activeEndpoint = await findWorkingEndpoint();
-        statusEl.textContent = `Sumber: ${activeEndpoint.name}`;
+        statusEl.textContent = "Memuat turun syarat minimum order Binance...";
+        activeEndpoint = await findEndpointAndFilters();
+        statusEl.textContent = `Sumber: ${activeEndpoint.name} (1D+4H+1H + Filters)`;
 
-        const settled = await Promise.allSettled(COINS.map(sym => fetchCoinData(activeEndpoint, sym)));
+        const settled = await Promise.allSettled(COINS.map(sym => fetchCoin(activeEndpoint, sym)));
         const ok = settled.filter(r => r.status === "fulfilled").map(r => r.value);
-        if (!ok.length) throw new Error("Tiada data coin berjaya dibaca.");
-
-        // Rank: Active Setups first, then highest confluence score, then trend alignment
-        ok.sort((a, b) => {
-          const aAct = a.signal !== "WAIT" ? 1 : 0;
-          const bAct = b.signal !== "WAIT" ? 1 : 0;
-          if (bAct !== aAct) return bAct - aAct;
-          if (b.score !== a.score) return b.score - a.score;
-          return Math.abs(b.volRatio) - Math.abs(a.volRatio);
-        });
+        if (!ok.length) throw new Error("Tiada data candle berjaya dibaca.");
 
         scanResults = ok;
+        sortResults();
         const nowStr = new Date().toLocaleTimeString("ms-MY", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
         document.getElementById("last-updated").textContent = `Kemas kini: ${nowStr}`;
         renderTop3();
         renderScannerList();
       } catch (err) {
         statusEl.textContent = "Sambungan gagal";
-        errBox.innerHTML = `
-          <div class="err-box">
-            <strong>Gagal menarik data pasaran Binance:</strong> ${err.message}<br>
-            Sila semak sambungan internet atau tetapkan <strong>Private DNS Android</strong> kepada <code>1dot1dot1dot1.cloudflare-dns.com</code> (lihat tab <strong>Disiplin</strong>), kemudian tekan <strong>🔄 Imbas</strong>.
-          </div>`;
+        errBox.innerHTML = `<div class="err-box"><strong>Gagal hubungi Binance:</strong> ${err.message}<br>Semak internet atau tetapkan Private DNS Android ke <code>1dot1dot1dot1.cloudflare-dns.com</code>.</div>`;
         document.getElementById("top3-container").innerHTML = "";
+        document.getElementById("market-banner").innerHTML = "";
       } finally {
         btn.disabled = false;
         btn.textContent = "🔄 Imbas";
       }
     }
 
-    // --- Render Single Full Entry Card ---
-    function buildEntryCardHTML(item, rankLabel = "") {
+    function gateBadge(ok, label) {
+      return `<div class="gate-item ${ok ? "gate-pass" : "gate-fail"}"><span>${ok ? "✅" : "❌"}</span><span>${label}</span></div>`;
+    }
+
+    function buildCardHTML(item, rankLabel = "") {
       const s = computeSizing(item);
+      const isSetup = item.signal === "LONG_SETUP" || item.signal === "SHORT_SETUP";
+      const isActionable = isSetup && s.eligible;
       const isLong = item.signal === "LONG_SETUP";
       const isShort = item.signal === "SHORT_SETUP";
-      const isWait = item.signal === "WAIT";
 
-      const cardCls = isLong ? "long-card" : (isShort ? "short-card" : "wait-card");
-      const pillCls = isLong ? "pill-long" : (isShort ? "pill-short" : "pill-wait");
-      const pillTxt = isLong ? "LONG SETUP ✓" : (isShort ? "SHORT SETUP ✓" : `WAIT • PANTAU ${item.bias}`);
-      const entryLabel = isWait ? `Zon Limit Pantau (${item.bias})` : `Entry Semasa (${item.bias})`;
+      const cardCls = isActionable ? (isLong ? "long-card" : "short-card") : (isSetup ? "blocked-card" : "wait-card");
+      const pillCls = isActionable ? (isLong ? "pill-long" : "pill-short") : (isSetup ? "pill-red" : "pill-wait");
+      const pillTxt = isActionable
+        ? (isLong ? "SAH ENTRY LONG ✓" : "SAH ENTRY SHORT ✓")
+        : (isSetup ? "TAK LEPAS MIN BINANCE" : "WAIT • JANGAN ENTRY");
+
       const chgColor = item.change24h >= 0 ? "var(--green)" : "var(--red)";
       const fundStr = item.fundingRate !== null ? `${(item.fundingRate * 100).toFixed(4)}%` : "N/A";
+      const coinShort = item.symbol.replace("USDT", "");
 
-      const commentary = isWait
-        ? `<strong>Status WAIT:</strong> ${item.reasons.join(". ")}.` + (item.positives.length ? `<br><span style="color:var(--muted)">Positif: ${item.positives.join("; ")}.</span>` : "")
-        : `<strong>Setup Sah (${item.bias}):</strong> ${item.positives.join("; ")}. Sahkan candle tutup & pasang SL segera selepas order masuk.`;
+      const gatesHTML = `
+        <div class="gate-grid">
+          ${gateBadge(item.gates.trend1dOk, `1D Trend (${item.trend1d})`)}
+          ${gateBadge(item.gates.struct4hOk, "4H Struktur & Pullback")}
+          ${gateBadge(item.gates.confirm1hOk, "1H Pengesahan Candle")}
+          ${gateBadge(item.gates.roomToSrOk, `Ruang S/R (${item.rrToSr.toFixed(1)}R)`)}
+          ${gateBadge(item.gates.momentumOk, "RSI / Vol / Funding")}
+          ${gateBadge(s.eligible, `Min Binance ($${s.minNotional})`)}
+        </div>
+      `;
+
+      let bodySection = "";
+      if (!isSetup) {
+        bodySection = `
+          <div class="wait-lock-box">
+            <strong>🔒 PELAN ORDER DIKUNCI (JANGAN ENTRY SEKARANG)</strong><br>
+            ${item.failReasons.map(r => `• ${r}`).join("<br>")}
+            ${item.triggerHint ? `<br><br><strong>Syarat Pantauan:</strong> ${item.triggerHint}.` : ""}
+          </div>
+        `;
+      } else if (!s.eligible) {
+        bodySection = `
+          <div class="min-warning">
+            <strong>⛔ ORDER DISEKAT — TAK LEPAS MINIMUM BINANCE (${item.symbol})</strong><br>
+            • Risiko anda (${(getPrefs().risk * 100).toFixed(2)}% = $${(getPrefs().equity * getPrefs().risk).toFixed(2)}) hasilkan saiz <strong>$${s.notional.toFixed(2)}</strong>.<br>
+            • Binance wajib minimum <strong>$${s.minNotional}</strong> (min <strong>${fmtQty(s.effectiveMinQty, item.symbol)} ${coinShort}</strong> ≈ $${s.minReqNotional.toFixed(2)}).<br>
+            • Jika dipaksa, risiko SL sebenar melonjak ke <strong>$${s.minReqRiskUsdt.toFixed(2)} (${s.minReqRiskPct.toFixed(2)}% modal)</strong>!<br>
+            • <em>Penyelesaian:</em> Pilih altcoin ($5 min) dalam senarai atau modal ≥ $${Math.ceil(s.minEquityForCurrentRisk)}.
+          </div>
+        `;
+      } else {
+        bodySection = `
+          <div class="levels-grid">
+            <div class="lvl-box">
+              <div class="lbl">Limit Entry (${item.bias})</div>
+              <div class="val">${fmtPrice(item.entryRef, item.symbol)}</div>
+              <div class="sub">1D+4H+1H Selari</div>
+            </div>
+            <div class="lvl-box">
+              <div class="lbl">Stop Loss (Mark Price)</div>
+              <div class="val val-red">${fmtPrice(item.slRef, item.symbol)}</div>
+              <div class="sub">-${s.slPct.toFixed(2)}% (Rugi -$${(s.actualLoss + s.estFee).toFixed(2)} inc. fee)</div>
+            </div>
+            <div class="lvl-box">
+              <div class="lbl">TP 1 (1.5R • Ambil 50%)</div>
+              <div class="val val-green">${fmtPrice(item.tp1Ref, item.symbol)}</div>
+              <div class="sub">Anggaran bersih +$${s.tp1Profit.toFixed(2)}</div>
+            </div>
+            <div class="lvl-box">
+              <div class="lbl">TP 2 (2.2R • Penuh)</div>
+              <div class="val val-green">${fmtPrice(item.tp2Ref, item.symbol)}</div>
+              <div class="sub">Anggaran bersih +$${s.tp2Profit.toFixed(2)}</div>
+            </div>
+          </div>
+
+          <div class="sizing-strip">
+            <div>
+              <div class="lbl">QTY SAH BINANCE</div>
+              <div class="val">${fmtQty(s.qty, item.symbol)} ${coinShort}</div>
+            </div>
+            <div>
+              <div class="lbl">NOTIONAL (MIN $${s.minNotional})</div>
+              <div class="val" style="color:var(--green);">$${s.notional.toFixed(2)} ✓</div>
+            </div>
+            <div>
+              <div class="lbl">MARGIN (${s.lev}× ISO)</div>
+              <div class="val">$${s.margin.toFixed(2)}</div>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <button class="btn btn-sec" onclick="copyPlan('${item.symbol}')">📋 Salin Order Binance</button>
+            <button class="btn" onclick="saveToPaper('${item.symbol}')">📝 Uji di Paper Lab</button>
+          </div>
+        `;
+      }
 
       return `
         <div class="card ${cardCls}">
           <div class="card-top">
             <div>
               ${rankLabel ? `<div class="rank-tag">${rankLabel}</div>` : ""}
-              <div class="coin-name">${item.symbol.replace("USDT", "")}<span style="color:var(--muted);font-size:13px;">/USDT</span></div>
+              <div class="coin-name">${coinShort}<span style="color:var(--muted);font-size:13px;">/USDT</span></div>
               <div class="coin-price">
-                Mark: $${fmtPrice(item.markPrice)}
+                Mark: $${fmtPrice(item.markPrice, item.symbol)}
                 <span style="color:${chgColor};margin-left:6px;">${item.change24h >= 0 ? "+" : ""}${item.change24h.toFixed(2)}%</span>
               </div>
             </div>
             <div style="text-align:right;">
               <span class="pill ${pillCls}">${pillTxt}</span>
-              <div style="font-size:11px;color:var(--muted);margin-top:5px;">Skor Konfluens: <strong style="color:#fff;">${item.score}/100</strong></div>
+              <div style="font-size:11px;color:var(--muted);margin-top:5px;">Penapis: <strong style="color:#fff;">${item.score}/100</strong></div>
             </div>
           </div>
 
-          <div class="levels-grid">
-            <div class="lvl-box">
-              <div class="lbl">${entryLabel}</div>
-              <div class="val">${fmtPrice(item.entryRef)}</div>
-              <div class="sub">1D: ${item.trend1d}</div>
-            </div>
-            <div class="lvl-box">
-              <div class="lbl">Stop Loss (SL)</div>
-              <div class="val val-red">${fmtPrice(item.slRef)}</div>
-              <div class="sub">Jarak -${s.slPct.toFixed(2)}% (-$${s.actualLoss.toFixed(2)})</div>
-            </div>
-            <div class="lvl-box">
-              <div class="lbl">Take Profit 1 (1.5R)</div>
-              <div class="val val-green">${fmtPrice(item.tp1Ref)}</div>
-              <div class="sub">Anggaran +$${s.tp1Profit.toFixed(2)}</div>
-            </div>
-            <div class="lvl-box">
-              <div class="lbl">Take Profit 2 (2.2R)</div>
-              <div class="val val-green">${fmtPrice(item.tp2Ref)}</div>
-              <div class="sub">Anggaran +$${s.tp2Profit.toFixed(2)}</div>
-            </div>
-          </div>
-
-          <div class="sizing-strip">
-            <div>
-              <div class="lbl">SAIZ QTY (${s.lev}× ISO)</div>
-              <div class="val">${fmtQty(s.qty)} ${item.symbol.replace("USDT","")}</div>
-            </div>
-            <div>
-              <div class="lbl">NOTIONAL</div>
-              <div class="val">$${s.notional.toFixed(1)}</div>
-            </div>
-            <div>
-              <div class="lbl">MARGIN DIPERLU</div>
-              <div class="val">$${s.margin.toFixed(2)}</div>
-            </div>
-          </div>
+          ${gatesHTML}
 
           <div class="ind-row">
-            <span class="ind-chip">EMA20 4H: ${fmtPrice(item.ema20_4h)}</span>
-            <span class="ind-chip">RSI 4H: ${item.rsi4h.toFixed(1)}</span>
-            <span class="ind-chip">ATR: ${fmtPrice(item.atr4h)}</span>
+            <span class="ind-chip">EMA20 4H: ${fmtPrice(item.ema20_4h, item.symbol)}</span>
+            <span class="ind-chip">EMA20 1H: ${fmtPrice(item.ema20_1h, item.symbol)}</span>
+            <span class="ind-chip">RSI: ${item.rsi4h.toFixed(1)}</span>
             <span class="ind-chip">Vol: ${item.volRatio.toFixed(2)}×</span>
             <span class="ind-chip">Fund: ${fundStr}</span>
           </div>
 
-          <div class="veteran-note">${commentary}</div>
-
-          <div class="card-actions">
-            <button class="btn btn-sec" onclick="copyPlan('${item.symbol}')">📋 Salin Pelan</button>
-            <button class="btn" onclick="saveToPaper('${item.symbol}')">📝 Simpan Paper</button>
-          </div>
+          ${bodySection}
         </div>
       `;
     }
 
     function renderTop3() {
-      const box = document.getElementById("top3-container");
-      const top3 = scanResults.slice(0, 3);
-      const labels = ["🥇 PILIHAN #1 TERATAS", "🥈 PILIHAN #2", "🥉 PILIHAN #3"];
-      box.innerHTML = top3.map((item, idx) => buildEntryCardHTML(item, labels[idx])).join("");
+      const readyList = scanResults.filter(x => x.signal !== "WAIT" && computeSizing(x).eligible);
+      const blockedSetupList = scanResults.filter(x => x.signal !== "WAIT" && !computeSizing(x).eligible);
+      const eligiblePool = scanResults.filter(x => computeSizing(x).eligible);
+      const banner = document.getElementById("market-banner");
+
+      if (readyList.length > 0) {
+        banner.innerHTML = `<div class="summary-banner banner-ok"><strong>✅ ${readyList.length}/10 COIN LULUS SEMUA 6 PENAPIS (1D+4H+1H) & LEPAS MIN BINANCE.</strong> Semak carta Binance & pasang SL segera. (Tiada jaminan menang — disiplin risiko wajib.)</div>`;
+      } else if (blockedSetupList.length > 0) {
+        banner.innerHTML = `<div class="summary-banner banner-warn"><strong>⚠️ ${blockedSetupList.length} SETUP WUJUD TETAPI TAK LEPAS MINIMUM BINANCE</strong> untuk modal/risiko sekarang. Top 3 di bawah ditapis kepada coin yang lepas had minimum Binance sahaja.</div>`;
+      } else {
+        banner.innerHTML = `<div class="summary-banner banner-wait"><strong>⏸️ 0/10 COIN SAH ENTRY SEKARANG — KEKAL TUNAI (WAIT).</strong> Jangan paksa masuk bila pasaran belum sah. Di bawah ialah Top 3 coin (yang lepas min Binance) paling hampir untuk dipantau.</div>`;
+      }
+
+      const top3 = (eligiblePool.length >= 3 ? eligiblePool : scanResults).slice(0, 3);
+      const labels = ["🥇 PILIHAN #1 (LEPAS MIN BINANCE)", "🥈 PILIHAN #2 (LEPAS MIN BINANCE)", "🥉 PILIHAN #3 (LEPAS MIN BINANCE)"];
+      document.getElementById("top3-container").innerHTML = top3.map((it, i) => buildCardHTML(it, labels[i])).join("");
     }
 
     function setFilter(f, btn) {
@@ -967,29 +972,37 @@
     function renderScannerList() {
       const box = document.getElementById("scanner-list");
       const filtered = scanResults.filter(item => {
-        if (currentFilter === "SETUP") return item.signal !== "WAIT";
+        const s = computeSizing(item);
+        if (currentFilter === "READY") return item.signal !== "WAIT" && s.eligible;
+        if (currentFilter === "ELIGIBLE") return s.eligible;
         if (currentFilter === "BULLISH") return item.trend1d === "BULLISH";
         if (currentFilter === "BEARISH") return item.trend1d === "BEARISH";
         return true;
       });
       if (!filtered.length) {
-        box.innerHTML = `<div class="card" style="text-align:center;color:var(--muted);">Tiada coin sepadan penapis ini.</div>`;
+        box.innerHTML = `<div class="card" style="text-align:center;color:var(--muted);">Tiada coin memenuhi penapis ini sekarang.</div>`;
         return;
       }
       box.innerHTML = filtered.map(item => {
-        const pillCls = item.signal === "LONG_SETUP" ? "pill-long" : (item.signal === "SHORT_SETUP" ? "pill-short" : "pill-wait");
-        const pillTxt = item.signal === "WAIT" ? `WAIT (${item.trend1d})` : item.signal.replace("_SETUP", "");
+        const s = computeSizing(item);
+        const isSetup = item.signal !== "WAIT";
+        const pillCls = (isSetup && s.eligible)
+          ? (item.signal === "LONG_SETUP" ? "pill-long" : "pill-short")
+          : (isSetup ? "pill-red" : "pill-wait");
+        const pillTxt = (isSetup && s.eligible)
+          ? (item.signal === "LONG_SETUP" ? "SAH LONG ✓" : "SAH SHORT ✓")
+          : (isSetup ? "MIN TAK LEPAS" : `WAIT (${item.trend1d})`);
         return `
           <div class="scan-row" onclick="openCoinModal('${item.symbol}')">
             <div>
-              <div style="font-weight:800;font-size:15px;">${item.symbol} <span style="font-weight:500;color:var(--muted);font-size:12px;">$${fmtPrice(item.markPrice)}</span></div>
+              <div style="font-weight:800;font-size:15px;">${item.symbol} <span style="font-weight:500;color:var(--muted);font-size:12px;">$${fmtPrice(item.markPrice, item.symbol)}</span></div>
               <div style="font-size:11px;color:var(--muted);margin-top:2px;">
-                Entry Ref: ${fmtPrice(item.entryRef)} • SL: ${fmtPrice(item.slRef)} • RSI: ${item.rsi4h.toFixed(1)}
+                Min Binance: $${s.minNotional} • RSI: ${item.rsi4h.toFixed(1)} • ${s.eligible ? "Saiz Lepas ✓" : "Modal/Risiko Tak Cukup ✗"}
               </div>
             </div>
             <div style="text-align:right;">
               <span class="pill ${pillCls}">${pillTxt}</span>
-              <div style="font-size:11px;color:var(--muted);margin-top:4px;">Skor ${item.score}</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:4px;">Penapis ${item.score}/100</div>
             </div>
           </div>`;
       }).join("");
@@ -998,62 +1011,47 @@
     function openCoinModal(symbol) {
       const item = scanResults.find(x => x.symbol === symbol);
       if (!item) return;
-      document.getElementById("modal-body").innerHTML = buildEntryCardHTML(item, "RUJUKAN PENUH COIN");
+      document.getElementById("modal-body").innerHTML = buildCardHTML(item, "PERINCIAN PENUH COIN");
       document.getElementById("detail-modal").classList.add("open");
     }
 
-    function closeModal() {
-      document.getElementById("detail-modal").classList.remove("open");
-    }
+    function closeModal() { document.getElementById("detail-modal").classList.remove("open"); }
 
     function copyPlan(symbol) {
       const item = scanResults.find(x => x.symbol === symbol);
       if (!item) return;
       const s = computeSizing(item);
       const txt = [
-        `THE VETERAN — ${item.symbol} (${item.signal})`,
-        `Arah: ${item.bias} | Trend 1D: ${item.trend1d} | Leverage: ${s.lev}x Isolated`,
-        `Entry Ref: ${fmtPrice(item.entryRef)} (Mark: ${fmtPrice(item.markPrice)})`,
-        `SL: ${fmtPrice(item.slRef)} (-$${s.actualLoss.toFixed(2)})`,
-        `TP1 (1.5R): ${fmtPrice(item.tp1Ref)} (+$${s.tp1Profit.toFixed(2)})`,
-        `TP2 (2.2R): ${fmtPrice(item.tp2Ref)} (+$${s.tp2Profit.toFixed(2)})`,
-        `Saiz: ${fmtQty(s.qty)} ${item.symbol.replace("USDT","")} | Margin: $${s.margin.toFixed(2)}`
+        `THE VETERAN v2.1 — ${item.symbol} (${item.signal})`,
+        `Margin: ISOLATED ${s.lev}x (One-Way)`,
+        `Limit Entry: ${fmtPrice(item.entryRef, symbol)}`,
+        `Qty (Sah Binance): ${fmtQty(s.qty, symbol)} ${symbol.replace("USDT","")} (Notional $${s.notional.toFixed(2)} >= $${s.minNotional})`,
+        `SL (Mark): ${fmtPrice(item.slRef, symbol)} (-$${(s.actualLoss + s.estFee).toFixed(2)})`,
+        `TP1 (1.5R): ${fmtPrice(item.tp1Ref, symbol)} | TP2 (2.2R): ${fmtPrice(item.tp2Ref, symbol)}`
       ].join("\n");
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(txt).then(() => showToast(`Pelan ${item.symbol} disalin!`));
-      } else {
-        prompt("Salin pelan:", txt);
-      }
+      if (navigator.clipboard) navigator.clipboard.writeText(txt).then(() => showToast(`Order ${symbol} disalin!`));
+      else prompt("Salin pelan:", txt);
     }
 
-    // --- Paper Lab (Local Phone Storage) ---
-    function getPaperState() {
-      return JSON.parse(localStorage.getItem("vet_paper") || '{"balance":1000,"trades":[]}');
-    }
-    function setPaperState(st) {
-      localStorage.setItem("vet_paper", JSON.stringify(st));
-    }
+    function getPaperState() { return JSON.parse(localStorage.getItem("vet_paper") || '{"balance":1000,"trades":[]}'); }
+    function setPaperState(st) { localStorage.setItem("vet_paper", JSON.stringify(st)); }
 
     function saveToPaper(symbol) {
       const item = scanResults.find(x => x.symbol === symbol);
-      if (!item) return;
+      if (!item || item.signal === "WAIT") return;
       const s = computeSizing(item);
+      if (!s.eligible) return;
       const st = getPaperState();
       st.trades.unshift({
         id: Date.now().toString(),
-        symbol: item.symbol,
-        side: item.bias,
-        entry: item.entryRef,
-        sl: item.slRef,
-        tp: item.tp2Ref,
-        qty: s.qty,
-        status: "OPEN",
-        pnl: 0,
+        symbol: item.symbol, side: item.bias,
+        entry: item.entryRef, sl: item.slRef, tp: item.tp2Ref,
+        qty: s.qty, status: "OPEN", pnl: 0,
         openedAt: new Date().toLocaleString("ms-MY")
       });
       setPaperState(st);
       renderPaper();
-      showToast(`${item.symbol} disimpan ke Paper Lab!`);
+      showToast(`${symbol} direkod di Paper Lab!`);
     }
 
     function closePaperTrade(id, presetPrice = null) {
@@ -1062,25 +1060,20 @@
       if (!t || t.status !== "OPEN") return;
       const liveItem = scanResults.find(x => x.symbol === t.symbol);
       const defPrice = presetPrice || (liveItem ? liveItem.markPrice : t.entry);
-      const input = presetPrice ? presetPrice : parseFloat(prompt(`Masukkan harga tutup untuk ${t.symbol}:`, fmtPrice(defPrice)));
+      const input = presetPrice ? presetPrice : parseFloat(prompt(`Harga tutup ${t.symbol}:`, fmtPrice(defPrice, t.symbol)));
       if (!isFinite(input) || input <= 0) return;
-
       const gross = t.side === "LONG" ? (input - t.entry) * t.qty : (t.entry - input) * t.qty;
-      const fee = (t.entry + input) * t.qty * 0.0005; // 0.05% each side
-      t.exit = input;
-      t.pnl = gross - fee;
-      t.status = "CLOSED";
+      const fee = (t.entry + input) * t.qty * 0.0005;
+      t.exit = input; t.pnl = gross - fee; t.status = "CLOSED";
       st.balance += t.pnl;
-      setPaperState(st);
-      renderPaper();
-      showToast(`Paper trade ditutup (${t.pnl >= 0 ? "+" : ""}$${t.pnl.toFixed(2)})`);
+      setPaperState(st); renderPaper();
+      showToast(`Paper ditutup (${t.pnl >= 0 ? "+" : ""}$${t.pnl.toFixed(2)})`);
     }
 
     function deletePaperTrade(id) {
       const st = getPaperState();
       st.trades = st.trades.filter(x => x.id !== id);
-      setPaperState(st);
-      renderPaper();
+      setPaperState(st); renderPaper();
     }
 
     function renderPaper() {
@@ -1090,7 +1083,6 @@
       const wins = closed.filter(t => t.pnl > 0).length;
       const wr = closed.length ? Math.round((wins / closed.length) * 100) : 0;
       document.getElementById("paper-wr").textContent = `${wr}% (${wins}/${closed.length})`;
-
       const box = document.getElementById("paper-trades-list");
       if (!st.trades.length) {
         box.innerHTML = `<div class="card" style="text-align:center;color:var(--muted);">Belum ada rekod Paper Trade.</div>`;
@@ -1105,7 +1097,7 @@
             </span>
           </div>
           <div style="font-size:12px;color:var(--muted);font-family:ui-monospace,monospace;">
-            Entry: ${fmtPrice(t.entry)} | SL: ${fmtPrice(t.sl)} | TP: ${fmtPrice(t.tp)} | Qty: ${fmtQty(t.qty)}
+            Entry: ${fmtPrice(t.entry, t.symbol)} | SL: ${fmtPrice(t.sl, t.symbol)} | TP: ${fmtPrice(t.tp, t.symbol)} | Qty: ${fmtQty(t.qty, t.symbol)}
           </div>
           <div style="font-size:11px;color:var(--muted);margin:4px 0 8px;">${t.openedAt}</div>
           ${t.status === "OPEN" ? `
@@ -1114,7 +1106,7 @@
               <button class="btn btn-danger" onclick="closePaperTrade('${t.id}', ${t.sl})">Kena SL</button>
               <button class="btn btn-sec" onclick="closePaperTrade('${t.id}')">Harga Lain</button>
             </div>
-          ` : `<button class="btn btn-sec" style="width:100%;" onclick="deletePaperTrade('${t.id}')">Padam Rekod</button>`}
+          ` : `<button class="btn btn-sec" style="width:100%;" onclick="deletePaperTrade('${t.id}')">Padam</button>`}
         </div>
       `).join("");
     }
@@ -1132,10 +1124,9 @@
       if (name === "paper") renderPaper();
     }
 
-        if ("serviceWorker" in navigator) {
+    if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("./sw.js").catch(() => {});
     }
-    // Boot
     loadPrefs();
     renderPaper();
     scanMarket();
